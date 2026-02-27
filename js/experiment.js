@@ -10,6 +10,7 @@ const ICON_SCALE_FACTOR = 1.2
 const ICON_DEFAULT_SCALE = 1
 const MOBILE_THRESHOLD = 768;
 const ICON_SPACE_FACTOR = 6
+const ICON_RADIUS = 2;
 
 // scene
 const scene = new THREE.Scene();
@@ -73,12 +74,15 @@ scene.background = bgTexture;
 
 // github logo
 const gitTexture = new THREE.TextureLoader().load('../images/github.png')
-
+//const gitGeometry = new THREE.ExtrudeGeometry(new THREE.CircleGeometry(2, 32));
+//const gitGeometry = new THREE.CircleGeometry(2, 32);
+const gitGeometry = new THREE.CylinderGeometry(ICON_RADIUS, ICON_RADIUS, 0.5, 20)
 const github = new THREE.Mesh(
-    new THREE.CircleGeometry(2, 32),
+    gitGeometry,
     new THREE.MeshBasicMaterial({map: gitTexture})
 );
 github.material.color.setHex(0xffffff);
+github.rotation.x += 1.5
 scene.add(github);
 bodyIcons.push(github)
 
@@ -86,7 +90,7 @@ bodyIcons.push(github)
 const linkTexture = new THREE.TextureLoader().load('../images/linkedin.png')
 
 const linkedin = new THREE.Mesh(
-    new THREE.CircleGeometry(2, 32),
+    new THREE.CircleGeometry(ICON_RADIUS, 32),
     new THREE.MeshBasicMaterial({map:linkTexture})
 );
 scene.add(linkedin);
@@ -135,12 +139,21 @@ function spinChamith() {
 
 }
 
+function spinGit() {
+    github.rotation.y += 0.02
+}
+
+function spinIcons() {
+    spinChamith();
+    spinGit();
+}
+
 // animate
 function animate() {
     requestAnimationFrame(animate);
 
     // stuff to animate here
-    spinChamith();
+    spinIcons();
     checkHover();
     renderer.render(scene, camera);
 }
