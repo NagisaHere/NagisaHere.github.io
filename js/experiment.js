@@ -9,7 +9,7 @@ const CAM_START_Z = 15
 const ICON_SCALE_FACTOR = 1.2
 const ICON_DEFAULT_SCALE = 1
 const MOBILE_THRESHOLD = 768;
-const ICON_SPACE_FACTOR = 3
+const ICON_SPACE_FACTOR = 6
 
 // scene
 const scene = new THREE.Scene();
@@ -53,6 +53,7 @@ const reaction = new THREE.Mesh(
 );
 
 scene.add(reaction);
+bodyIcons.push(reaction)
 
 // make it clickable
 window.addEventListener('click', () => {
@@ -74,9 +75,10 @@ scene.background = bgTexture;
 const gitTexture = new THREE.TextureLoader().load('../images/github.png')
 
 const github = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 32),
-    new THREE.MeshBasicMaterial(gitTexture)
+    new THREE.CircleGeometry(2, 32),
+    new THREE.MeshBasicMaterial({map: gitTexture})
 );
+github.material.color.setHex(0xffffff);
 scene.add(github);
 bodyIcons.push(github)
 
@@ -84,8 +86,8 @@ bodyIcons.push(github)
 const linkTexture = new THREE.TextureLoader().load('../images/linkedin.png')
 
 const linkedin = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 32),
-    new THREE.MeshBasicMaterial(linkTexture)
+    new THREE.CircleGeometry(2, 32),
+    new THREE.MeshBasicMaterial({map:linkTexture})
 );
 scene.add(linkedin);
 bodyIcons.push(linkedin)
@@ -146,6 +148,7 @@ function animate() {
 // arrange icons
 function arrIcons() {
     bodyIcons.forEach((mesh, index) => {
+        mesh.position.set(0, 0, 0)
         if (isMobile) {
             // verrrrr
             mesh.position.y = (1 - index) * ICON_SPACE_FACTOR;
@@ -156,7 +159,7 @@ function arrIcons() {
     })
 }
 
-//arrIcons()
+arrIcons()
 // call animate to the display
 animate();
 
