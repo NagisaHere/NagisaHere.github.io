@@ -16,23 +16,33 @@
 /* wrap allows multiple items to be displayed in a row */
 .body__container {
     display: flex;
-    flex-wrap: wrap; 
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
     height: 80%;
     width: 80%;
-    gap: 20px
+    background-color: aqua;
+    /* each child will try to be one third of the container and wrap as needed */
 }
-  
+
+.body__list {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 /* images in figma were about 174 by 174 ish  with the exception of the genki mf
 radius was 46*/
 .body__item {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center; /* center content horizontally */
     gap: 10px;
     border: 2px solid black;
-    border-radius: 46px
+    border-radius: 46px;
+    box-sizing: border-box;
+    width: 300px;
+    height: 300px;
 }
 
 .body__item a {
@@ -42,6 +52,11 @@ radius was 46*/
     color: black;
 }
 .body__image {
-    width: 174px;
-    height: 174px;
+    width: 100px;
+    height: 100px;
 }
+
+/* linkedin 0D7AB6 */
+/* genki D9FFDC */
+/* apa game thing FFE7D9 */
+/* course rev EEFF8E */
