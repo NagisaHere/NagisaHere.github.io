@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
 
 const CAMERA_DISTANCE = 75;
 const CAM_RATIO = 2/1;
@@ -11,6 +11,7 @@ const CAM_MIN_DISTANCE = 0.1;
 const CAM_MAX_DISTANCE = 1000;
 const CAM_START_Z = 15
 const ICON_SCALE_FACTOR = 1.2
+const ICON_SCALE_DIFF = 0.01
 const ICON_DEFAULT_SCALE = 1
 const MOBILE_THRESHOLD = 768;
 const ICON_SPACE_FACTOR = 6
@@ -29,6 +30,14 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+
+// 2d rendered for text
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+labelRenderer.domElement.style.position = 'absolute'; // idk if this should be right
+labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.style.pointerEvents = 'none'; // disable pointer stuff, otherwise mouse stuff is ded
+document.body.appendChild(labelRenderer.domElement);
 
 
 const DEBUG = false;
@@ -80,6 +89,7 @@ titleMesh.rotation.x += 0.4;
 scene.add(titleMesh)
 
 // live chamith reaction
+// TODO NEED TO ADD CSS2DRENDERER TO IT
 const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
 const reaction = new THREE.Mesh(
     new THREE.BoxGeometry(3,3,3),
@@ -88,6 +98,15 @@ const reaction = new THREE.Mesh(
 
 scene.add(reaction);
 bodyIcons.push(reaction)
+
+const reactDiv = document.createElement('div');
+reactDiv.className = 'label';
+reactDiv.textContent = 'Course Review';
+const reactLabel = new CSS2DObject(reactDiv);
+reactLabel.position.set(0, 1.5, 0); // this is gonna be an issue since
+// label needs to move with each thingy, maybe make it a tuple or struct idk
+// im lazy
+reaction.add(reactLabel);
 
 // make it clickable
 window.addEventListener('click', () => {
@@ -102,7 +121,7 @@ window.addEventListener('click', () => {
 });
 
 // le bgm
-const bgTexture = new THREE.TextureLoader().load('../images/bgtheme6.jpg')
+const bgTexture = new THREE.TextureLoader().load('../images/bgtheme7.jpg')
 scene.background = bgTexture;
 
 // github logo
@@ -138,6 +157,8 @@ const ambLight = new THREE.AmbientLight(0xffffff);
 scene.add(pointlight);
 
 var scaled = false;
+var scaleDirection = false; // true to go big and false to go small ig
+var scaleFactor = ICON_DEFAULT_SCALE;
 
 function checkHover() {
     // update raycast from cam to mouse
@@ -150,12 +171,12 @@ function checkHover() {
     if (intersects.length > 0) {
         // HOVER IS ACTIVE
         // this shouldnt activate on first load
-        reaction.material.color.setHex(0xff0000); // Change to red for now
         if (!scaled) {
 
-            reaction.scale.set(ICON_SCALE_FACTOR, ICON_SCALE_FACTOR, ICON_SCALE_FACTOR);
+            //reaction.scale.set(ICON_SCALE_FACTOR, ICON_SCALE_FACTOR, ICON_SCALE_FACTOR);
             scaled = true;
         }
+        scaleChamith();
         document.body.style.cursor = 'pointer'; 
     } else {
         // HOVER IS INACTIVE
@@ -173,6 +194,22 @@ function spinChamith() {
     reaction.rotation.y += 0.005
     reaction.rotation.z += 0.0001;
 
+}
+
+function scaleChamith() {
+    if (scaleDirection) {
+        // go bigger
+        scaleFactor += ICON_SCALE_DIFF;
+        if (scaleFactor > ICON_SCALE_FACTOR) {
+            scaleDirection = !scaleDirection;
+        }
+    } else {
+        scaleFactor -= ICON_SCALE_DIFF;
+        if (scaleFactor < ICON_DEFAULT_SCALE) {
+            scaleDirection = !scaleDirection;
+        }
+    }
+    reaction.scale.set(scaleFactor, scaleFactor, scaleFactor);
 }
 
 function spinGit() {
