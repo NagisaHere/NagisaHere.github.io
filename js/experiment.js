@@ -1,5 +1,9 @@
 import '../css/experiment.css';
 import * as THREE from 'three';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+
 
 const CAMERA_DISTANCE = 75;
 const CAM_RATIO = 2/1;
@@ -11,6 +15,7 @@ const ICON_DEFAULT_SCALE = 1
 const MOBILE_THRESHOLD = 768;
 const ICON_SPACE_FACTOR = 6
 const ICON_RADIUS = 2;
+
 
 // scene
 const scene = new THREE.Scene();
@@ -25,6 +30,12 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+
+const DEBUG = false;
+var controls = undefined;
+if (DEBUG) {
+    controls = new OrbitControls(camera, renderer.domElement);
+}
 const isMobile = window.innerWidth < MOBILE_THRESHOLD;
 
 var bodyIcons = []
@@ -43,9 +54,31 @@ window.addEventListener('mousemove', (event) => {
 });
 
 
+// DEBUG mode
+if (DEBUG) {
+    const lightHelper = new THREE.GridHelper();
+    scene.add(lightHelper)
 
+}
 
 // create objects and add
+
+// title thingy
+const loader = new FontLoader();
+const font = await loader.loadAsync('../fonts/helvetiker_regular.typeface.json');
+const titleGeometry = new TextGeometry( 'Ryan.dev', {
+    font: font,
+    size: 2,
+    depth: 1,
+    curveSegments: 12
+} );
+titleGeometry.center();
+const titleMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial) 
+titleMesh.position.set(0, 8, 0)
+titleMesh.rotation.x += 0.4;
+scene.add(titleMesh)
+
 // live chamith reaction
 const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
 const reaction = new THREE.Mesh(
@@ -99,6 +132,9 @@ bodyIcons.push(linkedin)
 // add light
 const pointlight = new THREE.PointLight(0xffffff);
 pointlight.position.set(5, 5, 5);
+
+const ambLight = new THREE.AmbientLight(0xffffff);
+
 scene.add(pointlight);
 
 var scaled = false;
@@ -155,6 +191,9 @@ function animate() {
     // stuff to animate here
     spinIcons();
     checkHover();
+    if (DEBUG) {
+        controls.update()
+    }
     renderer.render(scene, camera);
 }
 
