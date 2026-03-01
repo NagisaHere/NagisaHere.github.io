@@ -1,3 +1,8 @@
+/*  thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
+html {
+    scrollbar-width: none;
+}
+
 canvas {
     position:fixed;
     top: 0;
@@ -8,9 +13,10 @@ canvas {
 .label {
     color: white;
     font-family: sans-serif;
-    font-size: 20px;
+    font-size: 30px;
     padding: 2px 6px;
     background: rgba(0, 0, 0, 0.6);
     border-radius: 4px;
     margin-top: -1em;
 }
+

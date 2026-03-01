@@ -11,12 +11,12 @@ const CAM_MIN_DISTANCE = 0.1;
 const CAM_MAX_DISTANCE = 1000;
 const CAM_START_Z = 15
 const ICON_SCALE_FACTOR = 1.2
-const ICON_SCALE_DIFF = 0.01
+const ICON_SCALE_DIFF = 0.003
 const ICON_DEFAULT_SCALE = 1
 const MOBILE_THRESHOLD = 768;
 const ICON_SPACE_FACTOR = 6
 const ICON_RADIUS = 2;
-
+const DEBUG = false;
 
 // scene
 const scene = new THREE.Scene();
@@ -31,6 +31,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 
+
 // 2d rendered for text
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -40,7 +41,7 @@ labelRenderer.domElement.style.pointerEvents = 'none'; // disable pointer stuff,
 document.body.appendChild(labelRenderer.domElement);
 
 
-const DEBUG = false;
+
 var controls = undefined;
 if (DEBUG) {
     controls = new OrbitControls(camera, renderer.domElement);
@@ -82,11 +83,45 @@ const titleGeometry = new TextGeometry( 'Ryan.dev', {
     curveSegments: 12
 } );
 titleGeometry.center();
-const titleMaterial = new THREE.MeshStandardMaterial({ color: 0x000000 });
+
+const titleMaterial = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,         // Base color (keep white for clear glass)
+    metalness: 0.1,          // A tiny bit of metalness enhances reflections
+    roughness: 0.0,          // 0 = perfectly smooth and glossy
+    transmission: 0.5,       // 1 = fully act like glass (refracts light)
+    ior: 1.5,                // Index of Refraction (1.5 is standard glass)
+    thickness: 1.5,          // How deep the glass is (adjust based on text depth)
+    dispersion: 1.0,         // Creates the rainbow chromatic aberration!
+    clearcoat: 1.0           // Adds an extra layer of glossy polish
+});
+
 const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial) 
 titleMesh.position.set(0, 8, 0)
 titleMesh.rotation.x += 0.4;
-scene.add(titleMesh)
+
+
+// invisible pthingy
+const invisiblePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+if (DEBUG) {
+    const helper = new THREE.PlaneHelper( invisiblePlane, 1, 0xffff00 );
+    scene.add( helper );
+}
+
+// used to track intersection with plane idfk
+const targetPosition = new THREE.Vector3();
+
+scene.add(titleMesh);
+
+// 1. Create an invisible dummy object
+const dummy = new THREE.Object3D();
+
+// 2. Define your limits in Radians (e.g., limit it to 45 degrees left and right)
+const maxTurnRight = THREE.MathUtils.degToRad(30);
+const maxTurnLeft = THREE.MathUtils.degToRad(-30);
+
+const maxTiltUp = THREE.MathUtils.degToRad(0);
+const maxTiltDown = THREE.MathUtils.degToRad(0);
+
 
 // live chamith reaction
 // TODO NEED TO ADD CSS2DRENDERER TO IT
@@ -99,14 +134,16 @@ const reaction = new THREE.Mesh(
 scene.add(reaction);
 bodyIcons.push(reaction)
 
+// make text label for the text
 const reactDiv = document.createElement('div');
 reactDiv.className = 'label';
 reactDiv.textContent = 'Course Review';
 const reactLabel = new CSS2DObject(reactDiv);
-reactLabel.position.set(0, 1.5, 0); // this is gonna be an issue since
+reactLabel.position.set(0, 3, 0); // this is gonna be an issue since
 // label needs to move with each thingy, maybe make it a tuple or struct idk
 // im lazy
 reaction.add(reactLabel);
+reactLabel.visible = false;
 
 // make it clickable
 window.addEventListener('click', () => {
@@ -138,7 +175,7 @@ github.rotation.x += 1.5
 scene.add(github);
 bodyIcons.push(github)
 
-// github logo
+// linkedin
 const linkTexture = new THREE.TextureLoader().load('../images/linkedin.png')
 
 const linkedin = new THREE.Mesh(
@@ -148,9 +185,27 @@ const linkedin = new THREE.Mesh(
 scene.add(linkedin);
 bodyIcons.push(linkedin)
 
+// genki thingy
+const genkiTexture = new THREE.TextureLoader().load('../images/apa.png')
+//const genkiGeometry = new THREE.ExtrudeGeometry(new THREE.CircleGeometry(2, 32));
+//const genkiGeometry = new THREE.CircleGeometry(2, 32);
+const genkiGeometry = new THREE.SphereGeometry(ICON_RADIUS, 32, 16);
+const genki = new THREE.Mesh(
+    genkiGeometry,
+    new THREE.MeshBasicMaterial({map: genkiTexture})
+);
+genki.material.color.setHex(0xffffff);
+genki.rotation.x += 1.5
+scene.add(genki);
+bodyIcons.push(genki)
+
+// apa game thingy
+
+
+
 // add light
 const pointlight = new THREE.PointLight(0xffffff);
-pointlight.position.set(5, 5, 5);
+pointlight.position.set(10, 10, 10);
 
 const ambLight = new THREE.AmbientLight(0xffffff);
 
@@ -159,6 +214,27 @@ scene.add(pointlight);
 var scaled = false;
 var scaleDirection = false; // true to go big and false to go small ig
 var scaleFactor = ICON_DEFAULT_SCALE;
+
+// scrolling stuff
+function moveCamera() {
+
+
+}
+
+//document.body.onscroll = moveCamera;
+
+// ANIMATIONS FOR RENDERING OBJECTS
+function addLabel(labelName, objToLabel) {
+    const reactDiv = document.createElement('div');
+    reactDiv.className = 'label';
+    reactDiv.textContent = labelName;
+    const reactLabel = new CSS2DObject(reactDiv);
+    reactLabel.position.set(0, 1.5, 0); // this is gonna be an issue since
+    // label needs to move with each thingy, maybe make it a tuple or struct idk
+    // im lazy
+    objToLabel.add(reactLabel);
+    return reactLabel
+}
 
 function checkHover() {
     // update raycast from cam to mouse
@@ -175,6 +251,7 @@ function checkHover() {
 
             //reaction.scale.set(ICON_SCALE_FACTOR, ICON_SCALE_FACTOR, ICON_SCALE_FACTOR);
             scaled = true;
+            reactLabel.visible = true;
         }
         scaleChamith();
         document.body.style.cursor = 'pointer'; 
@@ -185,6 +262,9 @@ function checkHover() {
         if (scaled) {
             reaction.scale.set(ICON_DEFAULT_SCALE, ICON_DEFAULT_SCALE, ICON_DEFAULT_SCALE);
             scaled = false;
+            //reaction.remove(reactLabel)
+            reactLabel.visible = false;
+
         }
     }
 }
@@ -193,6 +273,10 @@ function spinChamith() {
     reaction.rotation.x += 0.01;
     reaction.rotation.y += 0.005
     reaction.rotation.z += 0.0001;
+}
+
+// return next scale direction??
+function scaleObjectLoop(objToScale) {
 
 }
 
@@ -222,6 +306,7 @@ function spinIcons() {
 }
 
 // animate
+// seems to run faster on better monitors
 function animate() {
     requestAnimationFrame(animate);
 
@@ -231,7 +316,41 @@ function animate() {
     if (DEBUG) {
         controls.update()
     }
+
+// 1. Fire the raycaster from the camera through the mouse position
+    raycaster.setFromCamera(mouse, camera);
+
+    // 2. Calculate exactly where that ray hits our invisible wall
+    // It stores the resulting X,Y,Z coordinates inside 'targetPosition'
+    raycaster.ray.intersectPlane(invisiblePlane, targetPosition);
+
+    // 1. Move the dummy to the exact same position as your real text
+    dummy.position.copy(titleMesh.position);
+
+    // 2. Let the dummy freely look at the mouse
+    dummy.lookAt(targetPosition);
+
+    // 3. CLAMPING THE ROTATION
+    // Take the dummy's Y rotation, force it within our limits, and apply it to the text
+    titleMesh.rotation.y = THREE.MathUtils.clamp(
+        dummy.rotation.y, 
+        maxTurnLeft, 
+        maxTurnRight
+    );
+
+    // Do the exact same thing for the up/down tilt (X axis)
+    titleMesh.rotation.x = THREE.MathUtils.clamp(
+        dummy.rotation.x, 
+        maxTiltDown, 
+        maxTiltUp
+    );
+
+    // Lock the Z axis so the text doesn't barrel-roll
+    titleMesh.rotation.z = 0;
+
     renderer.render(scene, camera);
+    
+    labelRenderer.render(scene, camera);
 }
 
 // arrange icons
@@ -243,7 +362,7 @@ function arrIcons() {
             mesh.position.y = (1 - index) * ICON_SPACE_FACTOR;
         } else {
             // horrrrrr
-            mesh.position.x = (index - 1) * ICON_SPACE_FACTOR;
+            mesh.position.x = (index - 1.5) * ICON_SPACE_FACTOR;
         }
     })
 }
