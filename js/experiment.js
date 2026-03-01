@@ -217,11 +217,19 @@ var scaleFactor = ICON_DEFAULT_SCALE;
 
 // scrolling stuff
 function moveCamera() {
+    // track where user has scrolled to from the very top of page
+    const t = document.body.getBoundingClientRect().top;
 
+    // do some funny stuff with icons here idk
 
+    // move camera by negative ammount since top is always negative
+    camera.position.z = CAM_START_Z + (t * -0.1);
+    camera.position.y = t * 0.1;
+    //camera.position.x = t * -0.02;
 }
 
-//document.body.onscroll = moveCamera;
+document.body.onscroll = moveCamera;
+moveCamera();
 
 // ANIMATIONS FOR RENDERING OBJECTS
 function addLabel(labelName, objToLabel) {
@@ -359,7 +367,7 @@ function arrIcons() {
         mesh.position.set(0, 0, 0)
         if (isMobile) {
             // verrrrr
-            mesh.position.y = (1 - index) * ICON_SPACE_FACTOR;
+            mesh.position.y = (-index) * ICON_SPACE_FACTOR;
         } else {
             // horrrrrr
             mesh.position.x = (index - 1.5) * ICON_SPACE_FACTOR;

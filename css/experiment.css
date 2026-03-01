@@ -1,15 +1,22 @@
+@font-face {
+    font-family: "Futura";
+    src: url(../fonts/FuturaCyrillicMedium.ttf);
+}
 /*  thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
 html {
     scrollbar-width: none;
 }
 
-canvas {
-    position:fixed;
-    top: 0;
-    left: 0;
+:root {
+  --dark-bg: rgba(15, 15, 15, 0.95);
+  --spacing: 350px;
+
+  font-family: "Futura";
+  font-weight: 400;
+  font-style: normal;
 }
 
-/* used for other text */
+/* used for hovered text over 3d objects */
 .label {
     color: white;
     font-family: sans-serif;
@@ -18,5 +25,36 @@ canvas {
     background: rgba(0, 0, 0, 0.6);
     border-radius: 4px;
     margin-top: -1em;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+main {
+  width: 100vw;
+  color: white;
+  z-index: 99;
+  position: absolute;
+  width: 100%;
+  margin: 0px auto;
+  padding: 40vw 0px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+h1 {
+    color: black;
+    background: var(--dark-bg);
+}
+.about__container {
+    color: black
+
+}
+
+.about__description {
+    grid-column: 2/3;
 }
 
