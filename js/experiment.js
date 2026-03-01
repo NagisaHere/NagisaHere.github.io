@@ -153,7 +153,7 @@ window.addEventListener('click', () => {
 
     // If the cube was clicked, open the URL
     if (intersects.length > 0) {
-        window.open('https://threejs.org', '_blank'); // Opens in a new tab
+        window.location.href = '../review.html'; // non new tab 
     }
 });
 
@@ -195,7 +195,7 @@ const genki = new THREE.Mesh(
     new THREE.MeshBasicMaterial({map: genkiTexture})
 );
 genki.material.color.setHex(0xffffff);
-genki.rotation.x += 1.5
+genki.rotation.x += 1.5;
 scene.add(genki);
 bodyIcons.push(genki)
 
