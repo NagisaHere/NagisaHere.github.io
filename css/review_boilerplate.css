@@ -1,0 +1,112 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    color: #1a1a1a;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited { text-decoration: none; color:black; }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+
+.dev__logo {
+    font-weight: normal;
+    font-size: 1.8rem;
+    text-decoration: none;
+}
+
+/* Top Information Section */
+.top-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.info-panel {
+    background-color: #d9d9d9;
+    flex: 3;
+    padding: 20px;
+}
+
+.info-panel h2 {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.info-panel p {
+    font-size: 1.4rem;
+    margin: 8px 0;
+}
+
+/* Instructor/ECP Panel */
+.side-panel {
+    background-color: #d9d9d9;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.side-panel img {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.side-panel a {
+    font-size: 1.5rem;
+    color: black;
+    text-decoration: none;
+}
+
+.side-panel a:hover {
+    text-decoration: underline;
+}
+
+/* Description Section */
+.description-panel {
+    background-color: #d9d9d9;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.description-panel p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.description-panel p:last-child {
+    margin-bottom: 0;
+}
+
+/* Bottom Diagrams Section */
+.diagrams-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.diagrams-section img {
+    max-width: 100%;
+    height: auto;
+}

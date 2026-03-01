@@ -25,6 +25,10 @@ body {
     text-decoration: none;
 }
 
+a {
+    text-decoration: none;
+}
+
 a:visited { text-decoration: none; color:black; }
 /* flex grow basically ranks how much space something takes; higher number = more space */
 .titles {
@@ -61,6 +65,8 @@ a:visited { text-decoration: none; color:black; }
 .card:hover {
     transform: scale(1.05)
 }
+
+
 
 .card h3 {
     color: black;

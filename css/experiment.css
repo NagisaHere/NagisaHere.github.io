@@ -25,6 +25,11 @@ html {
     background: rgba(0, 0, 0, 0.6);
     border-radius: 4px;
     margin-top: -1em;
+    transition: transform 0.3s ease-in-out
+}
+/* doesnt seem to like to work with 3d stuff hmmmmm */
+.label:hover {
+    transform: scale(1.05)
 }
 
 canvas {
