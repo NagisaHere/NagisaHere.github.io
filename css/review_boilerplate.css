@@ -25,6 +25,12 @@ a:visited { text-decoration: none; color:black; }
     font-size: 1.8rem;
     text-decoration: none;
 }
+/* mmm breadcrumbs */
+/* why is site hierarchy just breadcrumbs anyways??? */
+.course__breadcrumb__container {
+    padding: 10px 20px;
+    color: grey;
+}
 
 /* Top Information Section */
 .top-section {
@@ -110,3 +116,17 @@ a:visited { text-decoration: none; color:black; }
     max-width: 100%;
     height: auto;
 }
+
+.hidden {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateX(-100%);
+    transition: all 1s;
+}
+
+.show {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateX(0);
+}
+

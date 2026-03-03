@@ -8,7 +8,7 @@ html {
 }
 
 :root {
-  --dark-bg: rgba(15, 15, 15, 0.95);
+  --dark-bg: rgba(15, 15, 15, 0.6);
   --spacing: 350px;
 
   font-family: "Futura";
@@ -25,12 +25,12 @@ html {
     background: rgba(0, 0, 0, 0.6);
     border-radius: 4px;
     margin-top: -1em;
-    transition: transform 0.3s ease-in-out
+    /* transition: transform 0.3s ease-in-out */
 }
-/* doesnt seem to like to work with 3d stuff hmmmmm */
+/* doesnt seem to like to work with 3d stuff hmmmmm 
 .label:hover {
     transform: scale(1.05)
-}
+}*/
 
 canvas {
     position: fixed;
@@ -39,27 +39,36 @@ canvas {
 }
 
 main {
-  width: 100vw;
   color: white;
   z-index: 99;
   position: absolute;
-  width: 100%;
   margin: 0px auto;
-  padding: 40vw 0px;
+  width: 100%;
+  margin-top: 40vh;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+  gap: 100px;
 }
 
 h1 {
     color: black;
     background: var(--dark-bg);
 }
-.about__container {
-    color: black
 
+.about__title {
+    grid-column: span 3 / span 3;
+    margin-bottom: var(--spacing);
+   
 }
 
+.about__description__container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2vh 2vh;
+    grid-column-start: 3;
+    grid-column: span 3 / span 3;
+}   
+
 .about__description {
-    grid-column: 2/3;
+
 }
 

@@ -1,3 +1,6 @@
+/* this anim was largely thanks to
+https://www.youtube.com/watch?v=T33NN_pPeNI */
+
 .hidden {
     opacity: 0;
     filter: blur(5px);

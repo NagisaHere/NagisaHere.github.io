@@ -11,8 +11,9 @@ const CAM_MIN_DISTANCE = 0.1;
 const CAM_MAX_DISTANCE = 1000;
 const CAM_START_Z = 15
 const ICON_SCALE_FACTOR = 1.2
-const ICON_SCALE_DIFF = 0.003
-const ICON_DEFAULT_SCALE = 1
+const ICON_SCALE_DIFF = 0.003;
+const ICON_DEFAULT_SCALE = 1;
+const ICON_DEFAULT_ROTATION = 1.5;
 const MOBILE_THRESHOLD = 768;
 const ICON_SPACE_FACTOR = 6
 const ICON_RADIUS = 2;
@@ -171,22 +172,24 @@ const github = new THREE.Mesh(
     new THREE.MeshBasicMaterial({map: gitTexture})
 );
 github.material.color.setHex(0xffffff);
-github.rotation.x += 1.5
+github.rotation.x += ICON_DEFAULT_ROTATION;
 scene.add(github);
 bodyIcons.push(github)
 
 // linkedin
 const linkTexture = new THREE.TextureLoader().load('../images/linkedin.png')
+const linkGeometry = new THREE.CylinderGeometry(ICON_RADIUS, ICON_RADIUS, 0.5, 20)
 
 const linkedin = new THREE.Mesh(
-    new THREE.CircleGeometry(ICON_RADIUS, 32),
+    linkGeometry,
     new THREE.MeshBasicMaterial({map:linkTexture})
 );
+linkedin.rotation.x += ICON_DEFAULT_ROTATION;
 scene.add(linkedin);
 bodyIcons.push(linkedin)
 
 // genki thingy
-const genkiTexture = new THREE.TextureLoader().load('../images/apa.png')
+const genkiTexture = new THREE.TextureLoader().load('../images/APA.png')
 //const genkiGeometry = new THREE.ExtrudeGeometry(new THREE.CircleGeometry(2, 32));
 //const genkiGeometry = new THREE.CircleGeometry(2, 32);
 const genkiGeometry = new THREE.SphereGeometry(ICON_RADIUS, 32, 16);

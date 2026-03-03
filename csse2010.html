@@ -6,6 +6,7 @@
     <title>Ryan.dev</title>
     <link rel="stylesheet" href="./css/review_boilerplate.css">
 
+    <script defer src="./js/observe.js"></script>
 </head>
 <body>
 
@@ -13,7 +14,15 @@
         <a class="dev__logo" href="./experiment.html">Ryan.dev</a>
     </header>
 
-    <div class="top-section">
+    <!-- parent/course  -->
+    <nav class="course__breadcrumb__container">
+        <a href="./review.html" class="course__breadcrumb_root">Courses</a>
+        <!-- span is an inline element, no newline -->
+        <span class="course__breadcrumb__sep">/</span>
+        <span class="course__breadcrumb__current">CSSE2010</span>
+    </nav>
+
+    <div class="top-section hidden">
         <div class="info-panel">
             <h2>CSSE2010 - Introduction to Computer Systems</h2>
             <p>Overall: 7/10</p>
@@ -22,13 +31,13 @@
             <p>Year Taken: 2024 Sem 2</p>
         </div>
         
-        <div class="side-panel">
+        <div class='side-panel hidden'>
             <img src="./images/live.png" alt="Reaction" class="card-image">
             <a href="https://programs-courses.uq.edu.au/course.html?course_code=CSSE2010" target="_blank">ECP</a>
         </div>
     </div>
 
-    <div class="description-panel">
+    <div class="description-panel hidden">
         <p>Core course for Electrical engineering and Computer Science. Teaches logic gates, combinational circuits, sequential circuits, ALU (Arithmetic Logic Unit), ISA (Instruction Set Architecture), AVR Assembly Introduction, Timers, PWM (Pulse Width Modulation).<br>
         You will be assessed on building a circuit and coding a game that interacts with physical systems (e.g. buttons, switches, LED matrix displays).</p>
         
@@ -37,11 +46,10 @@
         <p>Recommended to take an easy course alongside your semester if you want to do well, unless you have prior experience.</p>
     </div>
 
-    <div class="diagrams-section">
+    <div class="diagrams-section hidden">
         <img src="incompatibilities_diagram.png" alt="Incompatible courses: COMP1300, COMP2303, COMP2302, CSSE1000, CSSE7035, CSSE7201, ELEC2002">
         
         <img src="course_flow_diagram.png" alt="Prerequisite flow: CSSE1001/ENGG1001 to CSSE2010, then to CSSE3010 and CSSE2310">
     </div>
-
 </body>
 </html>
