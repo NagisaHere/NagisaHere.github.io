@@ -1,48 +1,26 @@
 import '../css/experiment.css';
 import * as THREE from 'three';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // used for title
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'; // used for title
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // for debug movement
-import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js' // for attaching css to 3d objects
-import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js'
 
 const CAMERA_DISTANCE = 75;
 const CAM_RATIO = 2/1;
 const CAM_MIN_DISTANCE = 0.1;
 const CAM_MAX_DISTANCE = 1000;
-
 const CAM_START_Z = 15
-
-// icons refer to all 3d
-// max scale of an ICON
 const ICON_SCALE_FACTOR = 1.2
-
-// how much to increment an icon when it grows
 const ICON_SCALE_DIFF = 0.003;
-
-// what scale the icon starts at
 const ICON_DEFAULT_SCALE = 1;
 const ICON_DEFAULT_ROTATION = 1.5;
-
-
-
-// spacing factor between icon objects
-const ICON_SPACE_FACTOR = 6
-
-// radius of all 3d iocn objects
-const ICON_RADIUS = 2;
-
 const MOBILE_THRESHOLD = 768;
-
-// how thick title is
-const TITLE_THICKNESS = 0.1;
-const TITLE_SHAPES = 2;
-
+const ICON_SPACE_FACTOR = 6
+const ICON_RADIUS = 2;
 const DEBUG = false;
 
 // scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf0f0f0);
 // camera; distance, aspect ratio, min distance and max distance
 const camera = new THREE.PerspectiveCamera(CAMERA_DISTANCE, window.innerWidth / window.innerHeight, CAM_MIN_DISTANCE, CAM_MAX_DISTANCE);
 camera.position.z = CAM_START_Z;
@@ -64,9 +42,8 @@ labelRenderer.domElement.style.pointerEvents = 'none'; // disable pointer stuff,
 document.body.appendChild(labelRenderer.domElement);
 
 
-// need to declare this so I can disable orbital controls outside of debug mode
-var controls = undefined;
 
+var controls = undefined;
 if (DEBUG) {
     controls = new OrbitControls(camera, renderer.domElement);
 }
@@ -134,8 +111,7 @@ if (DEBUG) {
 // used to track intersection with plane idfk
 const targetPosition = new THREE.Vector3();
 
-// OLD TITLE MESH
-//scene.add(titleMesh);
+scene.add(titleMesh);
 
 // 1. Create an invisible dummy object
 const dummy = new THREE.Object3D();
@@ -183,9 +159,8 @@ window.addEventListener('click', () => {
 });
 
 // le bgm
-/*/
 const bgTexture = new THREE.TextureLoader().load('../images/bgtheme7.jpg')
-scene.background = bgTexture;*/
+scene.background = bgTexture;
 
 // github logo
 const gitTexture = new THREE.TextureLoader().load('../images/github.png')
@@ -242,100 +217,6 @@ scene.add(pointlight);
 var scaled = false;
 var scaleDirection = false; // true to go big and false to go small ig
 var scaleFactor = ICON_DEFAULT_SCALE;
-
-function generateFont(font) {
-
-    const color = new THREE.Color(0x006699);
-
-    const matDark = new THREE.MeshBasicMaterial({
-    color: color,
-    side: THREE.DoubleSide
-    });
-
-    const matLite = new THREE.MeshBasicMaterial({
-    color: color,
-    transparent: true,
-    opacity: 0.4,
-    side: THREE.DoubleSide
-    });
-
-    const message = '   Verge3D\nStroke text.';
-
-    const shapes = font.generateShapes(message, TITLE_SHAPES);
-
-    const geometry = new THREE.ShapeGeometry(shapes);
-
-    geometry.computeBoundingBox();
-
-    const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-
-    geometry.translate(xMid, 0, 0);
-
-    // make shape (N.B. edge view not visible)
-
-    const lightText = new THREE.Mesh(geometry, matLite);
-    
-    lightText.position.set(0, 3, -5)
-    scene.add(lightText);
-
-    // make line shape (N.B. edge view remains visible).
-    // webgl only has 1px lines so we need to trace along the curve
-    // and construct a new shape that is thicker.
-
-    const holeShapes = [];
-
-    for (let i = 0; i < shapes.length; i++) {
-
-    const shape = shapes[i];
-
-    if (shape.holes && shape.holes.length > 0) {
-
-        for (let j = 0; j < shape.holes.length; j ++) {
-
-        const hole = shape.holes[j];
-        holeShapes.push(hole);
-
-        }
-
-    }
-
-    }
-
-    shapes.push.apply(shapes, holeShapes);
-
-    const style = SVGLoader.getStrokeStyle(TITLE_THICKNESS, color.getStyle());
-
-    const strokeText = new THREE.Group();
-
-    for (let i = 0; i < shapes.length; i++) {
-
-    const shape = shapes[i];
-
-    const points = shape.getPoints();
-
-    const geometry = SVGLoader.pointsToStroke(points, style);
-
-    geometry.translate(xMid, 0, 0);
-
-    const strokeMesh = new THREE.Mesh(geometry, matDark);
-    strokeText.add(strokeMesh);
-
-    }
-
-    strokeText.position.set(0, 5, 1)
-    strokeText.rotation.y = 0.5
-
-    scene.add(strokeText);
-    renderer.render(scene, camera);
-
-
-}
-
-function drawTitle() {
-    const loader = new FontLoader();
-    loader.load('fonts/helvetiker_regular.typeface.json', generateFont(font)); //end load function
-}
-
 
 // scrolling stuff
 function moveCamera() {
@@ -497,7 +378,6 @@ function arrIcons() {
     })
 }
 
-drawTitle();
 arrIcons()
 // call animate to the display
 animate();
