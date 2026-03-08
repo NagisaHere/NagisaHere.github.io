@@ -1,14 +1,14 @@
 import '../css/experiment.css';
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // used for title
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'; // used for title
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // for debug movement
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js' // for attaching css to 3d objects
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; // animation library
 import { gsap } from 'gsap'
+import { Observer } from "gsap/all";
+gsap.registerPlugin(Observer);
 
 const CAMERA_DISTANCE = 75;
-const CAM_RATIO = 2/1;
 const CAM_MIN_DISTANCE = 0.1;
 const CAM_MAX_DISTANCE = 1000;
 
@@ -27,8 +27,6 @@ const ICON_DEFAULT_SCALE = 1;
 const ICON_DEFAULT_ROTATION = 1.5;
 
 
-
-// spacing factor between icon objects
 const ICON_SPACE_FACTOR = 6
 
 // radius of all 3d iocn objects
@@ -36,7 +34,7 @@ const ICON_RADIUS = 2;
 
 const MOBILE_THRESHOLD = 768;
 
-// how thick title is
+// how thick title is 
 const TITLE_THICKNESS = 0.1;
 const TITLE_SHAPES = 2;
 const TITLE_POS = {x: 0, y: 5, z: 1};
@@ -48,6 +46,13 @@ const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
 const DEBUG = false;
+const GENERATE_ITEMS = true;
+
+const PAGE_SECTIONS = [
+    { pos: { x: 0, y: 0, z: CAM_START_Z }, label: "Home" },
+    { pos: { x: 0, y: -50, z: 10 }, label: "Course Review" },
+    { pos: { x: 10, y: -100, z: 5 }, label: "Others" }
+];
 
 // scene
 const scene = new THREE.Scene();
@@ -105,58 +110,6 @@ if (DEBUG) {
 }
 
 // create objects and add
-
-// title thingy
-const loader = new FontLoader();
-const font = await loader.loadAsync('../fonts/helvetiker_regular.typeface.json');
-const titleGeometry = new TextGeometry( 'Ryan.dev', {
-    font: font,
-    size: 2,
-    depth: 1,
-    curveSegments: 12
-} );
-titleGeometry.center();
-
-const titleMaterial = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,         // Base color (keep white for clear glass)
-    metalness: 0.1,          // A tiny bit of metalness enhances reflections
-    roughness: 0.0,          // 0 = perfectly smooth and glossy
-    transmission: 0.5,       // 1 = fully act like glass (refracts light)
-    ior: 1.5,                // Index of Refraction (1.5 is standard glass)
-    thickness: 1.5,          // How deep the glass is (adjust based on text depth)
-    dispersion: 1.0,         // Creates the rainbow chromatic aberration!
-    clearcoat: 1.0           // Adds an extra layer of glossy polish
-});
-
-const titleMesh = new THREE.Mesh(titleGeometry, titleMaterial) 
-titleMesh.position.set(0, 8, 0)
-titleMesh.rotation.x += 0.4;
-
-
-// invisible pthingy
-const invisiblePlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-if (DEBUG) {
-    const helper = new THREE.PlaneHelper( invisiblePlane, 1, 0xffff00 );
-    scene.add( helper );
-}
-
-// used to track intersection with plane idfk
-const targetPosition = new THREE.Vector3();
-
-// OLD TITLE MESH
-//scene.add(titleMesh);
-
-// 1. Create an invisible dummy object
-const dummy = new THREE.Object3D();
-
-// 2. Define your limits in Radians (e.g., limit it to 45 degrees left and right)
-const maxTurnRight = THREE.MathUtils.degToRad(30);
-const maxTurnLeft = THREE.MathUtils.degToRad(-30);
-
-const maxTiltUp = THREE.MathUtils.degToRad(0);
-const maxTiltDown = THREE.MathUtils.degToRad(0);
-
-
 // live chamith reaction
 // TODO NEED TO ADD CSS2DRENDERER TO IT
 const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
@@ -167,6 +120,25 @@ const reaction = new THREE.Mesh(
 
 scene.add(reaction);
 bodyIcons.push(reaction)
+
+function generateBoxes() {
+    for (let i = 1; i < 3; i++) {
+        const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
+        const reaction = new THREE.Mesh(
+            new THREE.BoxGeometry(3,3,3),
+            new THREE.MeshBasicMaterial({map: reactionTexture})
+        );
+        const boxTarget = PAGE_SECTIONS[i];
+        reaction.position.set(boxTarget.x, boxTarget.y, boxTarget.z);
+        scene.add(reaction);
+    }
+
+
+}
+if (GENERATE_ITEMS) {
+    generateBoxes();
+}
+
 
 // make text label for the text
 const reactDiv = document.createElement('div');
@@ -236,23 +208,19 @@ genki.rotation.x += 1.5;
 scene.add(genki);
 bodyIcons.push(genki)
 
-// apa game thingy
 
-
-
-// add light
+// LIGHTING SECTION
+// amb light is universal, point is projected from a point
 const pointlight = new THREE.PointLight(0xffffff);
 pointlight.position.set(10, 10, 10);
 
 const ambLight = new THREE.AmbientLight(0xffffff);
 
 scene.add(pointlight);
-
-var scaled = false;
-var scaleDirection = false; // true to go big and false to go small ig
-var scaleFactor = ICON_DEFAULT_SCALE;
-
-function generateFont(font) {
+/* generate title font */
+/* text: string
+    positionDark/positionLight: {x: val, y: val, z: val} */
+function generateFont(font, text, positionDark, positionLight) {
 
     const color = new THREE.Color(0x006699);
 
@@ -269,7 +237,7 @@ function generateFont(font) {
     side: THREE.DoubleSide
     });
 
-    const message = '  Ryan.Dev\nライアン    ';
+    const message = text;
 
     const shapes = font.generateShapes(message, TITLE_SHAPES);
 
@@ -342,12 +310,12 @@ function generateFont(font) {
     scene.add(strokeText);
 
     gsap.to(strokeText.position, { 
-        ...TITLE_POS, // funny spread operator
+        ...positionDark, // funny spread operator
         duration: TITLE_ANIM_DURATION, 
         ease: "power3.out" 
     });
     gsap.to(lightText.position, { 
-        ...TITLE_LIGHT_POS, // funny spread operator
+        ...positionLight, // funny spread operator
         duration: TITLE_ANIM_DURATION, 
         ease: "power3.out" 
     });
@@ -361,12 +329,12 @@ function generateFont(font) {
 function drawTitle() {
     const loader = new FontLoader();
     loader.load('../fonts/Noto Sans JP_Regular.json', function(font) {
-        generateFont(font);
+        generateFont(font,'  Ryan.Dev\nライアン    ', TITLE_POS, TITLE_LIGHT_POS);
     }); //end load function
 }
 
 
-// scrolling stuff
+/* old scrolling stuff
 function moveCamera() {
     // track where user has scrolled to from the very top of page
     const t = document.body.getBoundingClientRect().top;
@@ -380,7 +348,7 @@ function moveCamera() {
 }
 
 document.body.onscroll = moveCamera;
-moveCamera();
+moveCamera(); */
 
 // ANIMATIONS FOR RENDERING OBJECTS
 function addLabel(labelName, objToLabel) {
@@ -395,6 +363,12 @@ function addLabel(labelName, objToLabel) {
     return reactLabel
 }
 
+
+var scaled = false;
+var scaleDirection = false; // true to go big and false to go small ig
+var scaleFactor = ICON_DEFAULT_SCALE;
+
+// handle hover scaling
 function checkHover() {
     // update raycast from cam to mouse
     raycaster.setFromCamera(mouse, camera);
@@ -463,39 +437,61 @@ function spinIcons() {
     spinChamith();
     spinGit();
 }
-// function for legacy title
-function titleFollowLoop() {
-// 1. Fire the raycaster from the camera through the mouse position
-    raycaster.setFromCamera(mouse, camera);
 
-    // 2. Calculate exactly where that ray hits our invisible wall
-    // It stores the resulting X,Y,Z coordinates inside 'targetPosition'
-    raycaster.ray.intersectPlane(invisiblePlane, targetPosition);
+let currentIndex = 0;
+let isAnimating = false;
 
-    // 1. Move the dummy to the exact same position as your real text
-    dummy.position.copy(titleMesh.position);
+function goToNextSection() {
+    // 1. Check if we are already moving or at the end
+    if (isAnimating || currentIndex >= PAGE_SECTIONS.length - 1) return;
 
-    // 2. Let the dummy freely look at the mouse
-    dummy.lookAt(targetPosition);
+    isAnimating = true;
+    currentIndex++;
 
-    // 3. CLAMPING THE ROTATION
-    // Take the dummy's Y rotation, force it within our limits, and apply it to the text
-    titleMesh.rotation.y = THREE.MathUtils.clamp(
-        dummy.rotation.y, 
-        maxTurnLeft, 
-        maxTurnRight
-    );
-
-    // Do the exact same thing for the up/down tilt (X axis)
-    titleMesh.rotation.x = THREE.MathUtils.clamp(
-        dummy.rotation.x, 
-        maxTiltDown, 
-        maxTiltUp
-    );
-
-    // Lock the Z axis so the text doesn't barrel-roll
-    titleMesh.rotation.z = 0;
+    const target = PAGE_SECTIONS[currentIndex];
+    // move to relevant section
+    gsap.to(camera.position, {
+        x: target.pos.x,
+        y: target.pos.y,
+        z: target.pos.z,
+        duration: 1,
+        ease: "power2.inOut",
+        onComplete: () => {
+            isAnimating = false; // Unlock after finished
+            console.log("Arrived at:", target.label);
+        }
+    });
 }
+
+function goToPrevSection() {
+    if (isAnimating || currentIndex <= 0) return;
+
+    isAnimating = true;
+    currentIndex--;
+
+    const target = PAGE_SECTIONS[currentIndex];
+
+    gsap.to(camera.position, {
+        x: target.pos.x,
+        y: target.pos.y,
+        z: target.pos.z,
+        duration: 1,
+        ease: "power2.inOut",
+        onComplete: () => {
+            isAnimating = false;
+        }
+    });
+}
+
+// create task manager lmao
+Observer.create({
+  target: window,
+  type: "wheel,touch",
+  preventDefault: true,
+  onDown: () => goToNextSection(),
+  onUp: () => goToPrevSection(),
+  tolerance: 30 // Prevent accidental tiny movements
+});
 
 // animate
 // seems to run faster on better monitors

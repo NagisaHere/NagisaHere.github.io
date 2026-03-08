@@ -3,8 +3,9 @@
     src: url(../fonts/FuturaCyrillicMedium.ttf);
 }
 /*  thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
-html {
+body, html {
     scrollbar-width: none;
+    overflow: hidden
 }
 
 :root {
@@ -72,3 +73,7 @@ h1 {
 
 }
 
+.test {
+    padding-top: 100vh;
+    background-color: aqua;
+}
