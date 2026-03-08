@@ -4,12 +4,14 @@ import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // used for tit
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'; // used for title
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // for debug movement
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js' // for attaching css to 3d objects
-import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; // animation library
+import { gsap } from 'gsap'
 
 const CAMERA_DISTANCE = 75;
 const CAM_RATIO = 2/1;
 const CAM_MIN_DISTANCE = 0.1;
 const CAM_MAX_DISTANCE = 1000;
+
 
 const CAM_START_Z = 15
 
@@ -37,6 +39,13 @@ const MOBILE_THRESHOLD = 768;
 // how thick title is
 const TITLE_THICKNESS = 0.1;
 const TITLE_SHAPES = 2;
+const TITLE_POS = {x: 0, y: 5, z: 1};
+const TITLE_LIGHT_POS = {x: 0, y: 4, z: 1};
+const TITLE_LSTART_OPACITY = 0;
+const TITLE_LEND_OPACITY = 0.4;
+const TITLE_DSTART_OPACITY = 0;
+const TITLE_DEND_OPACITY = 1;
+const TITLE_ANIM_DURATION = 3;
 
 const DEBUG = false;
 
@@ -249,17 +258,18 @@ function generateFont(font) {
 
     const matDark = new THREE.MeshBasicMaterial({
     color: color,
+    opacity: TITLE_DSTART_OPACITY,
     side: THREE.DoubleSide
     });
 
     const matLite = new THREE.MeshBasicMaterial({
     color: color,
     transparent: true,
-    opacity: 0.4,
+    opacity: TITLE_LSTART_OPACITY,
     side: THREE.DoubleSide
     });
 
-    const message = '   Verge3D\nStroke text.';
+    const message = '  Ryan.Dev\nライアン    ';
 
     const shapes = font.generateShapes(message, TITLE_SHAPES);
 
@@ -272,10 +282,12 @@ function generateFont(font) {
     geometry.translate(xMid, 0, 0);
 
     // make shape (N.B. edge view not visible)
+    // LIGHT TEXT GENERATION
 
     const lightText = new THREE.Mesh(geometry, matLite);
     
-    lightText.position.set(0, 3, -5)
+    lightText.position.set(0, -100, -100)
+    lightText.rotation.y = 0.5
     scene.add(lightText);
 
     // make line shape (N.B. edge view remains visible).
@@ -305,6 +317,8 @@ function generateFont(font) {
 
     const style = SVGLoader.getStrokeStyle(TITLE_THICKNESS, color.getStyle());
 
+    // DARK TEXT GENERATION
+
     const strokeText = new THREE.Group();
 
     for (let i = 0; i < shapes.length; i++) {
@@ -322,10 +336,23 @@ function generateFont(font) {
 
     }
 
-    strokeText.position.set(0, 5, 1)
+    strokeText.position.set(0, -100, -100)
     strokeText.rotation.y = 0.5
 
     scene.add(strokeText);
+
+    gsap.to(strokeText.position, { 
+        ...TITLE_POS, // funny spread operator
+        duration: TITLE_ANIM_DURATION, 
+        ease: "power3.out" 
+    });
+    gsap.to(lightText.position, { 
+        ...TITLE_LIGHT_POS, // funny spread operator
+        duration: TITLE_ANIM_DURATION, 
+        ease: "power3.out" 
+    });
+    gsap.to([matDark], { opacity: TITLE_DEND_OPACITY, duration: TITLE_ANIM_DURATION });
+    gsap.to([matLite], { opacity: TITLE_LEND_OPACITY, duration: TITLE_ANIM_DURATION });
     renderer.render(scene, camera);
 
 
@@ -333,7 +360,9 @@ function generateFont(font) {
 
 function drawTitle() {
     const loader = new FontLoader();
-    loader.load('fonts/helvetiker_regular.typeface.json', generateFont(font)); //end load function
+    loader.load('../fonts/Noto Sans JP_Regular.json', function(font) {
+        generateFont(font);
+    }); //end load function
 }
 
 
@@ -434,19 +463,8 @@ function spinIcons() {
     spinChamith();
     spinGit();
 }
-
-// animate
-// seems to run faster on better monitors
-function animate() {
-    requestAnimationFrame(animate);
-
-    // stuff to animate here
-    spinIcons();
-    checkHover();
-    if (DEBUG) {
-        controls.update()
-    }
-
+// function for legacy title
+function titleFollowLoop() {
 // 1. Fire the raycaster from the camera through the mouse position
     raycaster.setFromCamera(mouse, camera);
 
@@ -477,6 +495,21 @@ function animate() {
 
     // Lock the Z axis so the text doesn't barrel-roll
     titleMesh.rotation.z = 0;
+}
+
+// animate
+// seems to run faster on better monitors
+function animate() {
+    requestAnimationFrame(animate);
+
+    // stuff to animate here
+    spinIcons();
+    checkHover();
+    if (DEBUG) {
+        controls.update()
+    }
+
+
 
     renderer.render(scene, camera);
     
