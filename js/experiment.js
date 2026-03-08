@@ -438,6 +438,8 @@ function spinIcons() {
     spinGit();
 }
 
+// page section control moment
+
 let currentIndex = 0;
 let isAnimating = false;
 
@@ -530,6 +532,3 @@ drawTitle();
 arrIcons()
 // call animate to the display
 animate();
-
-// maybe make it clickable?
-// may need to use window.open(something.url) where something.url is ./local.html or smth
