@@ -45,14 +45,23 @@ const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
+// second text
+const REVIEW_POS = {x: -5, y: -46, z: -5};
+const REVIEW_LIGHT_POS = {x: -5, y: -44, z: -5};
+
 const DEBUG = false;
 const GENERATE_ITEMS = true;
 
 const PAGE_SECTIONS = [
     { pos: { x: 0, y: 0, z: CAM_START_Z }, label: "Home" },
     { pos: { x: 0, y: -50, z: 10 }, label: "Course Review" },
-    { pos: { x: 10, y: -100, z: 5 }, label: "Others" }
+    { pos: { x: 10, y: -100, z: 5 }, label: "Game" },
+    { pos: { x: 10, y: -150, z: 5 }, label: "Social" }
 ];
+const REVIEW_INDEX = 1;
+const GAME_INDEX = 2;
+const SOCIAL_INDEX = 3;
+
 
 // scene
 const scene = new THREE.Scene();
@@ -143,7 +152,7 @@ if (GENERATE_ITEMS) {
 // make text label for the text
 const reactDiv = document.createElement('div');
 reactDiv.className = 'label';
-reactDiv.textContent = 'Course Review';
+reactDiv.textContent = 'Click me!';
 const reactLabel = new CSS2DObject(reactDiv);
 reactLabel.position.set(0, 3, 0); // this is gonna be an issue since
 // label needs to move with each thingy, maybe make it a tuple or struct idk
@@ -330,6 +339,7 @@ function drawTitle() {
     const loader = new FontLoader();
     loader.load('../fonts/Noto Sans JP_Regular.json', function(font) {
         generateFont(font,'  Ryan.Dev\nライアン    ', TITLE_POS, TITLE_LIGHT_POS);
+        generateFont(font,'  Course\nReview    ', REVIEW_POS, REVIEW_LIGHT_POS);
     }); //end load function
 }
 
@@ -514,7 +524,7 @@ function animate() {
     labelRenderer.render(scene, camera);
 }
 
-// arrange icons
+// arrange icons in a row
 function arrIcons() {
     bodyIcons.forEach((mesh, index) => {
         mesh.position.set(0, 0, 0)
@@ -528,7 +538,14 @@ function arrIcons() {
     })
 }
 
+function arrIconsTwo() {
+    // icons are reaction, github, linkedin, apa
+    const tempPos = PAGE_SECTIONS[REVIEW_INDEX];
+    reaction.position.set(4, tempPos.pos.y, 0);
+}
+
 drawTitle();
-arrIcons()
+//arrIcons()
+arrIconsTwo()
 // call animate to the display
 animate();
