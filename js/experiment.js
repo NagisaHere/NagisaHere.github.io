@@ -3,10 +3,15 @@ import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // used for title
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // for debug movement
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js' // for attaching css to 3d objects
-import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; // animation library
-import { gsap } from 'gsap'
+import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; //  text to svg moment
+import { gsap } from 'gsap' // hee hee hee ha animation
 import { Observer } from "gsap/all";
 gsap.registerPlugin(Observer);
+import { Text } from "troika-three-text"
+// docs https://threejsresources.com/tool/troika-three-text
+// could just use troika-three-text to render text as well?
+// I love it when I start writing stuff and then a library two years ago does it
+// for me :>>>>>>>>>>>>>>>>>>>>> fuc
 
 const CAMERA_DISTANCE = 75;
 const CAM_MIN_DISTANCE = 0.1;
@@ -45,11 +50,13 @@ const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
-const GODOWN_POS = {};
+const GODOWN_POS = {x: 0, y: -6, z: 1};
 
 // second text
 const REVIEW_POS = {x: -5, y: -46, z: -5};
 const REVIEW_LIGHT_POS = {x: -5, y: -44, z: -5};
+
+const GAME_POS = {x: 5, y: -96, z: -5};
 
 const DEBUG = false;
 const GENERATE_ITEMS = true;
@@ -234,6 +241,26 @@ scene.add(pointlight);
     fontColour: 0x006699 (some colour)
 
     */
+// {text: string, textSize: int, colour: hexcolour, position: {x: val, y:val, z: val}}
+function pleaseHelpMe({text, textSize, textColour, position}) {
+    const outText = new Text();
+
+    outText.text = text;
+    outText.fontSize = textSize;
+    outText.color = textColour;
+    outText.position.x = position.x;
+    outText.position.y = position.y;
+    outText.position.z = position.z;
+
+    outText.font = '../fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf'
+
+    outText.sync(); // it does things idfk
+
+    scene.add(outText);
+
+    return outText;
+}
+
 // other potential params
 // colour, distance from camera (z), size, rotation, section it will be viewed in
 // AHHH I HATE JAVASCRIPT WHY DOES NAMING HAVE TO BE LIKE THIS FUUUUUUUUUUU
@@ -368,6 +395,18 @@ function drawTitle() {
             zFactor: NaN
         });
     }); //end load function
+    pleaseHelpMe({
+        text: "Scroll down for more \/",
+        textSize: 0.5,
+        textColour: 0xffffff,
+        position: GODOWN_POS
+    })
+    pleaseHelpMe({
+        text: "Placeholder",
+        textSize: 2,
+        textColour: 0x006699,
+        position: GAME_POS
+    })
 }
 
 
