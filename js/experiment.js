@@ -45,6 +45,8 @@ const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
+const GODOWN_POS = {};
+
 // second text
 const REVIEW_POS = {x: -5, y: -46, z: -5};
 const REVIEW_LIGHT_POS = {x: -5, y: -44, z: -5};
@@ -228,10 +230,18 @@ const ambLight = new THREE.AmbientLight(0xffffff);
 scene.add(pointlight);
 /* generate title font */
 /* text: string
-    positionDark/positionLight: {x: val, y: val, z: val} */
-function generateFont(font, text, positionDark, positionLight) {
+    positionDark/positionLight/Section: {x: val, y: val, z: val} 
+    fontColour: 0x006699 (some colour)
 
-    const color = new THREE.Color(0x006699);
+    */
+// other potential params
+// colour, distance from camera (z), size, rotation, section it will be viewed in
+// AHHH I HATE JAVASCRIPT WHY DOES NAMING HAVE TO BE LIKE THIS FUUUUUUUUUUU
+function generateFont({font, text, positionDark, positionLight, positionSection,
+    fontColour, zFactor
+}) {
+
+    const color = new THREE.Color(fontColour);
 
     const matDark = new THREE.MeshBasicMaterial({
     color: color,
@@ -318,6 +328,7 @@ function generateFont(font, text, positionDark, positionLight) {
 
     scene.add(strokeText);
 
+    // move this animation somewhere so it transitions???
     gsap.to(strokeText.position, { 
         ...positionDark, // funny spread operator
         duration: TITLE_ANIM_DURATION, 
@@ -331,15 +342,31 @@ function generateFont(font, text, positionDark, positionLight) {
     gsap.to([matDark], { opacity: TITLE_DEND_OPACITY, duration: TITLE_ANIM_DURATION });
     gsap.to([matLite], { opacity: TITLE_LEND_OPACITY, duration: TITLE_ANIM_DURATION });
     renderer.render(scene, camera);
-
+    return {dark: matDark, light: matLite};
 
 }
 
 function drawTitle() {
     const loader = new FontLoader();
-    loader.load('../fonts/Noto Sans JP_Regular.json', function(font) {
-        generateFont(font,'  Ryan.Dev\nライアン    ', TITLE_POS, TITLE_LIGHT_POS);
-        generateFont(font,'  Course\nReview    ', REVIEW_POS, REVIEW_LIGHT_POS);
+    loader.load('../fonts/Noto Sans JP_Regular.json', function(leFont) {
+        generateFont({
+            font: leFont,
+            text: "  Ryan.Dev\nライアン    ", 
+            positionDark: TITLE_POS, 
+            positionLight: TITLE_LIGHT_POS,
+            positionSection: NaN,
+            fontColour: 0x006699,
+            zFactor: NaN
+        });
+        generateFont({
+            font: leFont,
+            text: '  Course\nReview    ', 
+            positionDark: REVIEW_POS, 
+            positionLight: REVIEW_LIGHT_POS,
+            positionSection: NaN,
+            fontColour: 0x006699,
+            zFactor: NaN
+        });
     }); //end load function
 }
 
