@@ -39,6 +39,17 @@ const ICON_RADIUS = 2;
 
 const MOBILE_THRESHOLD = 768;
 
+const PAGE_SECTIONS = [
+    { pos: { x: 0, y: 0, z: CAM_START_Z }, label: "Home" },
+    { pos: { x: 0, y: -50, z: 10 }, label: "Course Review" },
+    { pos: { x: 10, y: -100, z: 5 }, label: "Game" },
+    { pos: { x: 10, y: -150, z: 5 }, label: "Social" }
+];
+const REVIEW_INDEX = 1;
+const GAME_INDEX = 2;
+const SOCIAL_INDEX = 3;
+
+
 // how thick title is 
 const TITLE_THICKNESS = 0.1;
 const TITLE_SHAPES = 2;
@@ -50,26 +61,18 @@ const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
-const GODOWN_POS = {x: 0, y: -6, z: 1};
+const GODOWN_POS = {x: 0, y: -10, z: 1};
 
 // second text
 const REVIEW_POS = {x: -5, y: -46, z: -5};
 const REVIEW_LIGHT_POS = {x: -5, y: -44, z: -5};
 
-const GAME_POS = {x: 5, y: -96, z: -5};
+const GAME_POS = {x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -95, z: -10};
+const GAME_LIGHT_POS = {x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -96.5, z: -10}
 
 const DEBUG = false;
 const GENERATE_ITEMS = true;
 
-const PAGE_SECTIONS = [
-    { pos: { x: 0, y: 0, z: CAM_START_Z }, label: "Home" },
-    { pos: { x: 0, y: -50, z: 10 }, label: "Course Review" },
-    { pos: { x: 10, y: -100, z: 5 }, label: "Game" },
-    { pos: { x: 10, y: -150, z: 5 }, label: "Social" }
-];
-const REVIEW_INDEX = 1;
-const GAME_INDEX = 2;
-const SOCIAL_INDEX = 3;
 
 
 // scene
@@ -199,6 +202,18 @@ github.material.color.setHex(0xffffff);
 github.rotation.x += ICON_DEFAULT_ROTATION;
 scene.add(github);
 bodyIcons.push(github)
+// make it clickable
+window.addEventListener('click', () => {
+    // Fire the raycaster at the exact moment of the click
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([github]);
+
+    // If the cube was clicked, open the URL
+    if (intersects.length > 0) {
+        window.location.href = 'https://github.com/NagisaHere'; // non new tab 
+    }
+});
+
 
 // linkedin
 const linkTexture = new THREE.TextureLoader().load('../images/linkedin.png')
@@ -211,6 +226,20 @@ const linkedin = new THREE.Mesh(
 linkedin.rotation.x += ICON_DEFAULT_ROTATION;
 scene.add(linkedin);
 bodyIcons.push(linkedin)
+
+// make it clickable
+window.addEventListener('click', () => {
+    // Fire the raycaster at the exact moment of the click
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([linkedin]);
+
+    // If the cube was clicked, open the URL
+    if (intersects.length > 0) {
+        window.location.href = 'https://www.linkedin.com/in/ryan-wang-287909266/'; // non new tab 
+    }
+});
+
+
 
 // genki thingy
 const genkiTexture = new THREE.TextureLoader().load('../images/APA.png')
@@ -225,6 +254,26 @@ genki.material.color.setHex(0xffffff);
 genki.rotation.x += 1.5;
 scene.add(genki);
 bodyIcons.push(genki)
+
+gsap.to(genki.rotation, {
+    y: Math.PI * 2,
+    duration: 4,
+    repeat: -1,
+    ease: "none"
+});
+
+// make it clickable
+window.addEventListener('click', () => {
+    // Fire the raycaster at the exact moment of the click
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([genki]);
+
+    // If the cube was clicked, open the URL
+    if (intersects.length > 0) {
+        window.location.href = '../game.html'; // non new tab 
+    }
+});
+
 
 
 // LIGHTING SECTION
@@ -254,18 +303,69 @@ function pleaseHelpMe({text, textSize, textColour, position}) {
 
     outText.font = '../fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf'
 
+    outText.textAlign = 'center';
+    outText.anchorX = 'center';
+    outText.anchorY = 'middle';
+
     outText.sync(); // it does things idfk
 
     scene.add(outText);
 
     return outText;
 }
+// leText: troita text obj idk
+function fadeFromBottom(leText, offset = 20, delay = 0.5) {
+    // store position of text (x)
+    // set position of the text to start (y)
+    // move from the start position (y) to the designated position with fade (x)
+
+    leText.fillOpacity = 0;
+
+    gsap.to(leText, { 
+        fillOpacity: 1, 
+        duration: 2, 
+        delay: delay, 
+        ease: "power2.out" 
+    });
+
+    gsap.from(leText.position, { 
+        y: `-=${offset}`, 
+        duration: 2, 
+        delay: delay, 
+        ease: "power2.out" 
+    });
+}
+
+
+function generateScroll(textCount = 5, spacing = 0) {
+    const scrollGroup = new THREE.Group()
+    scene.add(scrollGroup);
+    for (let i = -3; i < textCount; i++) {
+        let tempText = pleaseHelpMe({
+            text: "Scroll down for more \\/",
+            textSize: 0.5,
+            textColour: 0x000000,
+            position: GODOWN_POS
+        });
+
+        tempText.position.x = (i*spacing);
+        scrollGroup.add(tempText);
+
+    }
+    fadeFromBottom(scrollGroup, 20, 1.5)
+    gsap.to(scrollGroup.position, {
+        x: "-=50",
+        duration: 20,
+        repeat: -1,
+        ease: "none"
+    });
+}
 
 // other potential params
 // colour, distance from camera (z), size, rotation, section it will be viewed in
 // AHHH I HATE JAVASCRIPT WHY DOES NAMING HAVE TO BE LIKE THIS FUUUUUUUUUUU
 function generateFont({font, text, positionDark, positionLight, positionSection,
-    fontColour, zFactor
+    fontColour, zFactor, numShapes = 2, fontThickness = 0.1, fontRotation = 0
 }) {
 
     const color = new THREE.Color(fontColour);
@@ -285,7 +385,7 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
 
     const message = text;
 
-    const shapes = font.generateShapes(message, TITLE_SHAPES);
+    const shapes = font.generateShapes(message, numShapes);
 
     const geometry = new THREE.ShapeGeometry(shapes);
 
@@ -301,7 +401,7 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
     const lightText = new THREE.Mesh(geometry, matLite);
     
     lightText.position.set(0, -100, -100)
-    lightText.rotation.y = 0.5
+    lightText.rotation.y = fontRotation;
     scene.add(lightText);
 
     // make line shape (N.B. edge view remains visible).
@@ -329,7 +429,7 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
 
     shapes.push.apply(shapes, holeShapes);
 
-    const style = SVGLoader.getStrokeStyle(TITLE_THICKNESS, color.getStyle());
+    const style = SVGLoader.getStrokeStyle(fontThickness, color.getStyle());
 
     // DARK TEXT GENERATION
 
@@ -351,7 +451,7 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
     }
 
     strokeText.position.set(0, -100, -100)
-    strokeText.rotation.y = 0.5
+    strokeText.rotation.y = fontRotation
 
     scene.add(strokeText);
 
@@ -378,12 +478,33 @@ function drawTitle() {
     loader.load('../fonts/Noto Sans JP_Regular.json', function(leFont) {
         generateFont({
             font: leFont,
-            text: "  Ryan.Dev\nライアン    ", 
+            text: "  Ryan.Dev    ", 
             positionDark: TITLE_POS, 
             positionLight: TITLE_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
-            zFactor: NaN
+            zFactor: NaN,
+            numShapes: 2,
+            fontRotation: 0.5,
+        });
+        generateFont({
+            font: leFont,
+            text: "  ライアン    ", 
+            positionDark: {
+                x: TITLE_POS.x,
+                y: TITLE_POS.y - 5,
+                z: TITLE_POS.z
+            }, 
+            positionLight: {
+                x: TITLE_LIGHT_POS.x,
+                y: TITLE_LIGHT_POS.y - 5.5,
+                z: TITLE_POS.z - 1,
+            },
+            positionSection: NaN,
+            fontColour: 0x006699,
+            zFactor: NaN,
+            numShapes: 2,
+            fontRotation: -0.5,
         });
         generateFont({
             font: leFont,
@@ -392,21 +513,37 @@ function drawTitle() {
             positionLight: REVIEW_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
-            zFactor: NaN
+            zFactor: NaN,
+            numShapes: 2,
+            fontRotation: 0.5
+        });
+        generateFont({
+            font: leFont,
+            text: '  APA Game    ', 
+            positionDark: GAME_POS, 
+            positionLight: GAME_LIGHT_POS,
+            positionSection: NaN,
+            fontColour: 0x006699,
+            zFactor: NaN,
+            numShapes: 2,
+            fontThickness: 0.08,
+            fontRotation: -0.5
         });
     }); //end load function
-    pleaseHelpMe({
-        text: "Scroll down for more \/",
+    /*let downText = pleaseHelpMe({
+        text: "Scroll down for more \\/",
         textSize: 0.5,
-        textColour: 0xffffff,
+        textColour: 0x000000,
         position: GODOWN_POS
-    })
-    pleaseHelpMe({
-        text: "Placeholder",
+    });
+    fadeFromBottom(downText);*/
+    generateScroll(12, 6);
+    /*pleaseHelpMe({
+        text: "APA Game",
         textSize: 2,
         textColour: 0x006699,
         position: GAME_POS
-    })
+    })*/
 }
 
 
@@ -562,6 +699,7 @@ function goToPrevSection() {
 }
 
 // create task manager lmao
+// basically runs the function
 Observer.create({
   target: window,
   type: "wheel,touch",
@@ -606,8 +744,15 @@ function arrIcons() {
 
 function arrIconsTwo() {
     // icons are reaction, github, linkedin, apa
-    const tempPos = PAGE_SECTIONS[REVIEW_INDEX];
-    reaction.position.set(4, tempPos.pos.y, 0);
+    const reviewPos = PAGE_SECTIONS[REVIEW_INDEX];
+    reaction.position.set(4, reviewPos.pos.y, 0);
+
+    const gamePos = PAGE_SECTIONS[GAME_INDEX];
+    genki.position.set(gamePos.pos.x, gamePos.pos.y-1, -5);
+
+    const otherPos = PAGE_SECTIONS[SOCIAL_INDEX];
+    github.position.set(-4 + otherPos.pos.x, otherPos.pos.y, -5);
+    linkedin.position.set(4 + otherPos.pos.x, otherPos.pos.y, -5);
 }
 
 drawTitle();
