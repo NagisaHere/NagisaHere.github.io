@@ -15,7 +15,7 @@ const HeroOverlay = () => {
         </p>
         
         <a
-          href="/blogs"
+          href="/blog"
           className="pointer-events-auto inline-block rounded-full bg-primary px-8 py-3 font-bold text-darkbg transition-all duration-300 hover:bg-white"
         >
           View Blogs
