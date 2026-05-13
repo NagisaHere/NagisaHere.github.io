@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@theme {
+  /* Matches 3D accent (TorusKnot) and original portfolio accent */
+  --color-primary: #00d8ff;
+  --color-darkbg: #121212;
+}
+
+body,
+html,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-darkbg);
+}
