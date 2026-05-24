@@ -153,7 +153,7 @@ if (DEBUG) {
 // create objects and add
 // live chamith reaction
 // TODO NEED TO ADD CSS2DRENDERER TO IT
-const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
+const reactionTexture = new THREE.TextureLoader().load('../images/clogo.png')
 const reaction = new THREE.Mesh(
     new THREE.BoxGeometry(3, 3, 3),
     new THREE.MeshBasicMaterial({ map: reactionTexture })
@@ -164,7 +164,7 @@ bodyIcons.push(reaction)
 
 function generateBoxes() {
     for (let i = 1; i < 3; i++) {
-        const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
+        const reactionTexture = new THREE.TextureLoader().load('../images/clogo.png')
         const reaction = new THREE.Mesh(
             new THREE.BoxGeometry(3, 3, 3),
             new THREE.MeshBasicMaterial({ map: reactionTexture })

@@ -1,16 +1,18 @@
 Gemini was used to generate the background images for the coursework.
 STM32: https://gemini.google.com/share/d7a35b463dbd
 AVR: https://gemini.google.com/share/cac4af13c57e
-
+terminal: https://www.dreamstime.com/program-code-matrix-black-background-animation-green-text-set-codes-providing-matrix-database-large-green-matrix-image222692332
+python: https://medium.com/@munyaokelvin/args-and-kwargs-in-python-750e0b18564e
 
 The hide animation was taken inspiration from this video.
 https://www.youtube.com/watch?v=T33NN_pPeNI
 
 The three.js library was used to make the landing page.
-    - SVG example -> 
-    - troika-three-text
-    - fireship tutorial
+general documentation
+https://threejs.org/docs 
+    - SVG example -> https://threejs.org/examples/#webgl_geometry_text_stroke
+    - troika-three-text -> https://protectwise.github.io/troika/troika-three-text/
+    - fireship tutorial on threejs -> https://www.youtube.com/watch?v=Q7AOvWpIVHU
 
-The rest of the code was structured myself.
-
+The rest of the code was structured myself. I hate javascript.
 
