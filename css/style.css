@@ -1,13 +1,14 @@
-/* === Base reset === */
+/* Base */
 * {
-    box-sizing: border-box;
-    margin: 0;
+    box-sizing: border-box; /* basically content consumed space takes space */
+    margin: 0; 
     padding: 0;
 }
 
-/* === Shared components === */
+/* Shared components */
+/* This is to disable the blue hypertext thingies */
 a {
-    text-decoration: none;
+    text-decoration: none; 
 }
 
 a:visited {
@@ -50,7 +51,7 @@ a:visited {
 /* thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
 html:has(body.page-home),
 body.page-home {
-    scrollbar-width: none;
+    scrollbar-width: none; /* hide scroll*/
     overflow: hidden;
 }
 
@@ -87,6 +88,9 @@ body.page-home canvas {
     left: 0;
 }
 
+/* attemped stuff but all of this is basically pointless
+* lmao */
+
 body.page-home main {
     color: white;
     z-index: 99;
@@ -118,8 +122,10 @@ body.page-home .about__description__container {
 
 body.page-home .test {
     padding-top: 100vh;
-    background-color: aqua;
+    background-color: 0xfcfde2; /* same as 3d background*/
 }
+
+/* END HOME SECITON*/
 
 /* REVIEW PAGE SECTION */
 body.page-review {
@@ -230,7 +236,7 @@ body.page-review #card-CSSE1001 {
 }
 
 @media (max-width: 650px) {
-    /* Changes the grid from 2 columns to 1 column */
+    /* Changes the grid from 2 columns to 1 column for mobile */
     body.page-review .grid-container {
         grid-template-columns: 1fr;
     }
@@ -244,13 +250,13 @@ body.page-review #card-CSSE1001 {
     }
 }
 
-/* COURSE DETAIL PAGE SECTION */
+/* COURSE DETAIL PAGE SECTION (per course styling)*/
 @font-face {
     font-family: "Noto Sans JP";
     src: url(../fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf) format("truetype");
     font-weight: 400;
     font-style: normal;
-    font-display: swap;
+    font-display: swap; /* default font until it loads */
 }
 
 @font-face {
@@ -281,12 +287,7 @@ body.page-course {
 
 body.page-course .site-title {
     font-size: 1.8rem;
-    font-weight: 600;
     margin-bottom: 30px;
-}
-
-body.page-course .dev__logo {
-    font-weight: 600;
 }
 
 /* mmm breadcrumbs */
@@ -349,7 +350,7 @@ body.page-course .side-panel a:hover {
     text-decoration: underline;
 }
 
-/* Description Section */
+/* Description Section of course */
 body.page-course .description-panel {
     background-color: #d9d9d9;
     padding: 20px;
@@ -428,6 +429,7 @@ body.page-course .flow-diagram__node {
     color: #1a1a1a;
 }
 
+
 body.page-course .flow-diagram__node--prereq {
     background-color: #e6e66d;
 }
@@ -450,7 +452,7 @@ body.page-course .flow-diagram__line--down {
 }
 
 body.page-course .flow-diagram__split {
-    display: block;
+    display: block; /* its a block (flex but kinnnda centered)*/
     overflow: visible;
     margin-top: -1px;
 }
@@ -463,24 +465,6 @@ body.page-course .flow-diagram__children {
     margin-top: -2px;
 }
 
-body.page-course .flow-diagram--single-child .flow-diagram__split {
-    display: none;
-}
-
-body.page-course .flow-diagram--single-child .flow-diagram__children {
-    gap: 0;
-}
-
-body.page-course .flow-diagram--no-prereq .flow-diagram__node--prereq,
-body.page-course .flow-diagram--no-prereq .flow-diagram__line--prereq {
-    display: none;
-}
-
-body.page-course .flow-diagram--leaf .flow-diagram__split,
-body.page-course .flow-diagram--leaf .flow-diagram__children,
-body.page-course .flow-diagram--leaf .flow-diagram__line--to-children {
-    display: none;
-}
 
 @media (max-width: 700px) {
     body.page-course .diagrams-section {
@@ -500,73 +484,10 @@ body.page-course .flow-diagram--leaf .flow-diagram__line--to-children {
 
 body.page-course .hidden {
     transform: translateX(-100%);
+
 }
 
 body.page-course .show {
     transform: translateX(0);
 }
 
-/* === Legacy home layout === */
-#navbar__title {
-    font-size: 24px;
-    font-weight: bold;
-    text-decoration: none;
-    color: black;
-}
-
-.body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-}
-
-/* wrap allows multiple items to be displayed in a row */
-.body__container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    height: 80%;
-    width: 80%;
-    background-color: aqua;
-    /* each child will try to be one third of the container and wrap as needed */
-}
-
-.body__list {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
-
-/* images in figma were about 174 by 174 ish  with the exception of the genki mf
-radius was 46*/
-.body__item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center; /* center content horizontally */
-    gap: 10px;
-    border: 2px solid black;
-    border-radius: 46px;
-    box-sizing: border-box;
-    width: 300px;
-    height: 300px;
-}
-
-.body__item a {
-    font-size: 40px;
-    font-weight: bold;
-    text-decoration: none;
-    color: black;
-}
-
-.body__image {
-    width: 100px;
-    height: 100px;
-}
-
-/* linkedin 0D7AB6 */
-/* genki D9FFDC */
-/* apa game thing FFE7D9 */
-/* course rev EEFF8E */
