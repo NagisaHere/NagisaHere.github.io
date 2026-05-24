@@ -4,17 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan.dev</title>
-    <link rel="stylesheet" href="./css/review_boilerplate.css">
-
+    <link rel="stylesheet" href="./css/style.css">
+    <script defer src="./js/observe.js"></script>
 </head>
-<body>
+<body class="page-course">
 
     <header class="header">
-        <a class="dev__logo" href="./experiment.html">Ryan.dev</a>
+        <a class="dev__logo" href="./index.html">Ryan.dev</a>
     </header>
-
+    <!-- parent/course  -->
+    <nav class="course__breadcrumb__container">
+        <a href="./review.html" class="course__breadcrumb_root">Courses</a>
+        <!-- span is an inline element, no newline -->
+        <span class="course__breadcrumb__sep">/</span>
+        <span class="course__breadcrumb__current">CSSE2310</span>
+    </nav>
     <div class="top-section">
-        <div class="info-panel">
+        <div class="info-panel hidden">
             <h2>CSSE2310 - Computer Systems Principles and Programming</h2>
             <p>Overall: 7/10</p>
             <p>Difficulty: 8/10</p>
@@ -22,13 +28,13 @@
             <p>Year Taken: 2025 Sem 1</p>
         </div>
         
-        <div class='side-panel'>
+        <div class='side-panel hidden'>
             <img src="./images/live.png" alt="Reaction" class="card-image">
             <a href="https://programs-courses.uq.edu.au/course.html?course_code=CSSE2310" target="_blank">ECP</a>
         </div>
     </div>
 
-    <div class="description-panel">
+    <div class="description-panel hidden">
         <p>Core course for Electrical Engineers, and a must do for Software Engineering</p>
         <p>You will heavily learn C programming for CLI interfacing, breakpoint debugging, multi-process programming, and client/server programming.
             <br> You will also program in a remote server environment connected via ssh, executing linux commands and editing code using vim.</p>

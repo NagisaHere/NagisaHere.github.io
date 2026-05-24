@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan.dev</title>
-    <link rel="stylesheet" href="./css/review_boilerplate.css">
-
+    <link rel="stylesheet" href="./css/style.css">
+    <script defer src="./js/observe.js"></script>
 </head>
-<body>
+<body class="page-course">
 
     <header class="header">
-        <a class="dev__logo" href="./experiment.html">Ryan.dev</a>
+        <a class="dev__logo" href="./index.html">Ryan.dev</a>
     </header>
 
+    <!-- parent/course  -->
+    <nav class="course__breadcrumb__container">
+        <a href="./review.html" class="course__breadcrumb_root">Courses</a>
+        <!-- span is an inline element, no newline -->
+        <span class="course__breadcrumb__sep">/</span>
+        <span class="course__breadcrumb__current">CSSE3010</span>
+    </nav>
 
-
-    <div class="top-section">
+    <div class="top-section hidden">
         <div class="info-panel">
             <h2>CSSE3010 - Embedded Systems Design and Interfacing</h2>
             <p>Overall: 7/10</p>
@@ -24,13 +30,13 @@
             <p>Year Taken: 2025 Sem 2</p>
         </div>
         
-        <div class='side-panel'>
+        <div class='side-panel hidden'>
             <img src="./images/live.png" alt="Reaction" class="card-image">
             <a href="https://programs-courses.uq.edu.au/course.html?course_code=CSSE3010" target="_blank">ECP</a>
         </div>
     </div>
 
-    <div class="description-panel">
+    <div class="description-panel hidden">
        <p>Core course for Electrical Engineering, teaching programming of advanced microcontrollers.</p>
        <p>Use of the STM32 microcontroller family, interfacing with common peripherals (LEDs, SSD, Radio Module).<br>
         Learn how to program in freeRTOS to implement state machines, alongside common error encoding schemes such as hammming encoding.

@@ -1,3 +1,359 @@
+/* === Base reset === */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* === Shared components === */
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+
+.dev__logo {
+    font-weight: normal;
+    font-size: 1.8rem;
+    text-decoration: none;
+}
+
+/* Shared fade animation base */
+.hidden {
+    opacity: 0;
+    filter: blur(5px);
+    transition: all 1s;
+}
+
+.show {
+    opacity: 1;
+    filter: blur(0);
+}
+
+/* === Page: home (3D) === */
+@font-face {
+    font-family: "Futura";
+    src: url(../fonts/FuturaCyrillicMedium.ttf);
+}
+
+/* thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
+html:has(body.page-home),
+body.page-home {
+    scrollbar-width: none;
+    overflow: hidden;
+}
+
+body.page-home {
+    font-family: "Futura", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body.page-home {
+    --dark-bg: rgba(15, 15, 15, 0.6);
+    --spacing: 350px;
+}
+
+/* used for hovered text over 3d objects */
+body.page-home .label {
+    color: white;
+    font-family: sans-serif;
+    font-size: 30px;
+    padding: 2px 6px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    margin-top: -1em;
+    /* transition: transform 0.3s ease-in-out */
+}
+/* doesnt seem to like to work with 3d stuff hmmmmm
+body.page-home .label:hover {
+    transform: scale(1.05)
+}*/
+
+body.page-home canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+body.page-home main {
+    color: white;
+    z-index: 99;
+    position: absolute;
+    margin: 0px auto;
+    width: 100%;
+    margin-top: 40vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 100px;
+}
+
+body.page-home h1 {
+    color: black;
+    background: var(--dark-bg);
+}
+
+body.page-home .about__title {
+    grid-column: span 3 / span 3;
+    margin-bottom: var(--spacing);
+}
+
+body.page-home .about__description__container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2vh 2vh;
+    grid-column-start: 3;
+    grid-column: span 3 / span 3;
+}
+
+body.page-home .test {
+    padding-top: 100vh;
+    background-color: aqua;
+}
+
+/* === Page: review grid === */
+body.page-review {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+/* flex grow basically ranks how much space something takes; higher number = more space */
+body.page-review .titles {
+    text-align: center;
+    flex-grow: 1;
+}
+
+body.page-review .titles h2 {
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+body.page-review .grid-container {
+    display: grid;
+    /* This creates 2 columns that take up equal fractions (1fr) of the space */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 20px auto; /* Centers the grid on the page */
+}
+
+/* Individual Card Styling */
+body.page-review .card {
+    background-color: #167ebc;
+    border: 3px solid black;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between; /* Pushes text to the left and image to the right */
+    align-items: flex-start;
+    transition: transform 0.3s ease-in-out;
+}
+
+body.page-review .card:hover {
+    transform: scale(1.05);
+}
+
+body.page-review .card h3 {
+    color: black;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+body.page-review .card p {
+    color: black;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+/* Image styling for the first card */
+body.page-review .card-image {
+    width: 80px; /* Adjust size later */
+    height: auto;
+    border: 1px solid white;
+}
+
+/* this anim was largely thanks to
+https://www.youtube.com/watch?v=T33NN_pPeNI */
+body.page-review .grid-container .hidden {
+    transform: translateY(100%);
+}
+
+body.page-review .grid-container .show {
+    transform: translateY(0);
+}
+
+body.page-review .grid-container .card:nth-child(2) {
+    transition-delay: 200ms;
+}
+
+/* use linear gradient to cheat lower opacity */
+body.page-review #card-CSSE2010 {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/2010_bg.png');
+    background-size: 100% auto;
+}
+
+body.page-review #card-CSSE3010 {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/3010_bg.png');
+    background-size: 100% auto;
+}
+
+body.page-review #card-CSSE2310 {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/2310_bg.png');
+    background-size: 100% auto;
+}
+
+/* this one is really annoying bruh */
+body.page-review #card-CSSE1001 {
+    background-color: black;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/1001_bg2.jpg');
+    background-size: 50% auto;
+    /* background-position: left 100px bottom 100px; */
+}
+
+@media (max-width: 650px) {
+    /* Changes the grid from 2 columns to 1 column */
+    body.page-review .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stacks the header items vertically so they don't squish */
+    body.page-review .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+/* === Page: course detail === */
+body.page-course {
+    font-family: Arial, sans-serif;
+    color: #1a1a1a;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* mmm breadcrumbs */
+/* why is site hierarchy just breadcrumbs anyways??? */
+body.page-course .course__breadcrumb__container {
+    padding: 10px 20px;
+    color: grey;
+}
+
+/* Top Information Section */
+body.page-course .top-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+body.page-course .info-panel {
+    background-color: #d9d9d9;
+    flex: 3;
+    padding: 20px;
+}
+
+body.page-course .info-panel h2 {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+body.page-course .info-panel p {
+    font-size: 1.4rem;
+    margin: 8px 0;
+}
+
+/* Instructor/ECP Panel */
+body.page-course .side-panel {
+    background-color: #d9d9d9;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+body.page-course .side-panel img {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+body.page-course .side-panel a {
+    font-size: 1.5rem;
+    color: black;
+    text-decoration: none;
+}
+
+body.page-course .side-panel a:hover {
+    text-decoration: underline;
+}
+
+/* Description Section */
+body.page-course .description-panel {
+    background-color: #d9d9d9;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+body.page-course .description-panel p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+body.page-course .description-panel p:last-child {
+    margin-bottom: 0;
+}
+
+/* Bottom Diagrams Section */
+body.page-course .diagrams-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+body.page-course .diagrams-section img {
+    max-width: 100%;
+    height: auto;
+}
+
+body.page-course .hidden {
+    transform: translateX(-100%);
+}
+
+body.page-course .show {
+    transform: translateX(0);
+}
+
+/* === Legacy home layout === */
 #navbar__title {
     font-size: 24px;
     font-weight: bold;
@@ -51,6 +407,7 @@ radius was 46*/
     text-decoration: none;
     color: black;
 }
+
 .body__image {
     width: 100px;
     height: 100px;

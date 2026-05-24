@@ -1,0 +1,16 @@
+Gemini was used to generate the background images for the coursework.
+STM32: https://gemini.google.com/share/d7a35b463dbd
+AVR: https://gemini.google.com/share/cac4af13c57e
+
+
+The hide animation was taken inspiration from this video.
+https://www.youtube.com/watch?v=T33NN_pPeNI
+
+The three.js library was used to make the landing page.
+    - SVG example -> 
+    - troika-three-text
+    - fireship tutorial
+
+The rest of the code was structured myself.
+
+
