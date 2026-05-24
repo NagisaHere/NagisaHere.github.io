@@ -42,10 +42,22 @@
 
     </div>
 
-    <div class="diagrams-section">
-        <img src="incompatibilities_diagram.png" alt="Incompatible courses: COMP1300, COMP2303, COMP2302, CSSE1000, CSSE7035, CSSE7201, ELEC2002">
-        
-        <img src="course_flow_diagram.png" alt="Prerequisite flow: CSSE1001/ENGG1001 to CSSE2010, then to CSSE3010 and CSSE2310">
+    <div class="diagrams-section hidden">
+        <aside class="course__incompatible" aria-label="Incompatible courses">
+            <p class="course__incompatible__title">Incompatible:</p>
+            <ul class="course__incompatible__list">
+                <li>COMP2303<span class="course__incompatible__or">or</span></li>
+                <li>COMP7306<span class="course__incompatible__or">or</span></li>
+                <li>CSSE7231</li>
+            </ul>
+        </aside>
+        <div class="course__flow-diagram" role="img" aria-label="Prerequisite flow: CSSE2010 to CSSE2310">
+            <div class="flow-diagram flow-diagram--leaf">
+                <div class="flow-diagram__node flow-diagram__node--prereq">CSSE2010</div>
+                <div class="flow-diagram__line flow-diagram__line--down flow-diagram__line--prereq"></div>
+                <div class="flow-diagram__node flow-diagram__node--current">CSSE2310</div>
+            </div>
+        </div>
     </div>
 
 </body>
