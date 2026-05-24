@@ -97,7 +97,11 @@ const GENERATE_ITEMS = true;
 
 // scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xfcfde2);
+
+
+//scene.background = new THREE.Color(0xfcfde2);
+const bgTexture = new THREE.TextureLoader().load('../images/bgtheme8.jpg')
+scene.background = bgTexture;
 // camera; distance, aspect ratio, min distance and max distance
 const camera = new THREE.PerspectiveCamera(CAMERA_DISTANCE, window.innerWidth / window.innerHeight, CAM_MIN_DISTANCE, CAM_MAX_DISTANCE);
 camera.position.z = CAM_START_Z;
@@ -205,9 +209,8 @@ window.addEventListener('click', () => {
 });
 
 // le bgm
-/*/
-const bgTexture = new THREE.TextureLoader().load('../images/bgtheme7.jpg')
-scene.background = bgTexture;*/
+
+
 
 // github logo
 const gitTexture = new THREE.TextureLoader().load('../images/github.png')
