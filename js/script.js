@@ -70,6 +70,23 @@ const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
+// splash screen image blocks (near title; tweak pos/rot as needed)
+const SPLASH_BLOCK_SIZE = 1.5;
+const SPLASH_ESP32_POS = { x: -7, y: 2, z: 2 };
+const SPLASH_ESP32_ROT = { x: 0.15, y: 0.35, z: 0 };
+const SPLASH_BLOCK_IMG_POS = { x: 7, y: 2, z: 2 };
+const SPLASH_BLOCK_IMG_ROT = { x: -0.1, y: -0.4, z: 0 };
+const SPLASH_JP_POS = { x: -5, y: -6, z: 3 };
+const SPLASH_JP_ROT = { x: 0, y: 0.6, z: 0 };
+const SPLASH_GFL2_POS = { x: 5, y: -6, z: 3 };
+const SPLASH_GFL2_ROT = { x: 0, y: -0.5, z: 0 };
+const SPLASH_ENDFIELD_POS = { x: -4, y: -1, z: 2 };
+const SPLASH_ENDFIELD_ROT = { x: 0.2, y: 0.25, z: 0 };
+const SPLASH_CHINA_POS = { x: 4, y: -2, z: 2 };
+const SPLASH_CHINA_ROT = { x: -0.15, y: -0.3, z: 0 };
+const SPLASH_RCBAKERY_POS = { x: 0, y: -1, z: 1 };
+const SPLASH_RCBAKERY_ROT = { x: 0.1, y: 0, z: 0.1 };
+
 const GODOWN_POS = {x: 0, y: -10, z: 1};
 
 // second text
@@ -179,6 +196,29 @@ if (GENERATE_ITEMS) {
     generateBoxes();
 }
 
+function createSplashBlock({ position, imagePath, rotation }) {
+    const texture = new THREE.TextureLoader().load(imagePath);
+    const block = new THREE.Mesh(
+        new THREE.BoxGeometry(SPLASH_BLOCK_SIZE, SPLASH_BLOCK_SIZE, SPLASH_BLOCK_SIZE),
+        new THREE.MeshBasicMaterial({ map: texture })
+    );
+    block.position.set(position.x, position.y, position.z);
+    block.rotation.set(rotation.x, rotation.y, rotation.z);
+    scene.add(block);
+    return block;
+}
+
+const SPLASH_BLOCKS = [
+    { position: SPLASH_ESP32_POS, rotation: SPLASH_ESP32_ROT, imagePath: '../images/esp32.png' },
+    { position: SPLASH_BLOCK_IMG_POS, rotation: SPLASH_BLOCK_IMG_ROT, imagePath: '../images/block.jpg' },
+    { position: SPLASH_JP_POS, rotation: SPLASH_JP_ROT, imagePath: '../images/jp.png' },
+    { position: SPLASH_GFL2_POS, rotation: SPLASH_GFL2_ROT, imagePath: '../images/gfl2.jpg' },
+    { position: SPLASH_ENDFIELD_POS, rotation: SPLASH_ENDFIELD_ROT, imagePath: '../images/endfield.jpg' },
+    { position: SPLASH_CHINA_POS, rotation: SPLASH_CHINA_ROT, imagePath: '../images/china.jpg' },
+    { position: SPLASH_RCBAKERY_POS, rotation: SPLASH_RCBAKERY_ROT, imagePath: '../images/rcbakery.png' },
+];
+
+SPLASH_BLOCKS.forEach(createSplashBlock);
 
 // make text label for the text
 const reactDiv = document.createElement('div');
