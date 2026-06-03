@@ -1,4 +1,3 @@
-import '../css/experiment.css';
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // used for title
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // for debug movement
@@ -11,7 +10,7 @@ import { Text } from "troika-three-text"
 // docs https://threejsresources.com/tool/troika-three-text
 // could just use troika-three-text to render text as well?
 // I love it when I start writing stuff and then a library two years ago does it
-// for me :>>>>>>>>>>>>>>>>>>>>> fuc
+// for me :>>>>>>>>>>>>>>>>>>>>>
 
 const CAMERA_DISTANCE = 75;
 const CAM_MIN_DISTANCE = 0.1;
@@ -51,7 +50,7 @@ const PAGE_SECTIONS = [
 // keyboard customisation thingy?
 // can use gltf loader for this
 const PROJECT_PAGES = [
-    {pos: {}},
+    { pos: {} },
 ];
 
 const REVIEW_INDEX = 1;
@@ -62,14 +61,15 @@ const SOCIAL_INDEX = 3;
 // how thick title is 
 const TITLE_THICKNESS = 0.1;
 const TITLE_SHAPES = 2;
-const TITLE_POS = {x: 0, y: 5, z: 1};
-const TITLE_LIGHT_POS = {x: 0, y: 4, z: 1};
+const TITLE_POS = { x: 0, y: 5, z: 1 };
+const TITLE_LIGHT_POS = { x: 0, y: 4, z: 1 };
 const TITLE_LSTART_OPACITY = 0;
 const TITLE_LEND_OPACITY = 0.4;
 const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
+<<<<<<< HEAD
 // splash screen image blocks (near title; tweak pos/rot as needed)
 const SPLASH_BLOCK_SIZE = 1.5;
 const SPLASH_ESP32_POS = { x: -7, y: 2, z: 2 };
@@ -88,20 +88,25 @@ const SPLASH_RCBAKERY_POS = { x: 0, y: -1, z: 1 };
 const SPLASH_RCBAKERY_ROT = { x: 0.1, y: 0, z: 0.1 };
 
 const GODOWN_POS = {x: 0, y: -10, z: 1};
+=======
+const GODOWN_POS = { x: 0, y: -10, z: 1 };
+>>>>>>> main
 
 // second text
-const REVIEW_POS = {x: -5, y: -46, z: -5};
-const REVIEW_LIGHT_POS = {x: -5, y: -44, z: -5};
+const REVIEW_POS = { x: -5, y: -46, z: -5 };
+const REVIEW_LIGHT_POS = { x: -5, y: -44, z: -5 };
 
-const GAME_POS = {x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -95, z: -10};
-const GAME_LIGHT_POS = {x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -96.5, z: -10}
+const GAME_POS = { x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -95, z: -10 };
+const GAME_LIGHT_POS = { x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -96.5, z: -10 }
 
-const SOCIAL_POS = {x: PAGE_SECTIONS[SOCIAL_INDEX].pos.x - 1,
+const SOCIAL_POS = {
+    x: PAGE_SECTIONS[SOCIAL_INDEX].pos.x - 1,
     y: PAGE_SECTIONS[SOCIAL_INDEX].pos.y + 5,
     z: PAGE_SECTIONS[SOCIAL_INDEX].pos.z - 15
 }
 
-const SOCIAL_LIGHT_POS = {x: PAGE_SECTIONS[SOCIAL_INDEX].pos.x - 1,
+const SOCIAL_LIGHT_POS = {
+    x: PAGE_SECTIONS[SOCIAL_INDEX].pos.x - 1,
     y: PAGE_SECTIONS[SOCIAL_INDEX].pos.y + 4,
     z: PAGE_SECTIONS[SOCIAL_INDEX].pos.z - 15
 }
@@ -113,7 +118,11 @@ const GENERATE_ITEMS = true;
 
 // scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xfcfde2);
+
+
+//scene.background = new THREE.Color(0xfcfde2);
+const bgTexture = new THREE.TextureLoader().load('../images/bgtheme8.jpg')
+scene.background = bgTexture;
 // camera; distance, aspect ratio, min distance and max distance
 const camera = new THREE.PerspectiveCamera(CAMERA_DISTANCE, window.innerWidth / window.innerHeight, CAM_MIN_DISTANCE, CAM_MAX_DISTANCE);
 camera.position.z = CAM_START_Z;
@@ -169,10 +178,10 @@ if (DEBUG) {
 // create objects and add
 // live chamith reaction
 // TODO NEED TO ADD CSS2DRENDERER TO IT
-const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
+const reactionTexture = new THREE.TextureLoader().load('../images/clogo.png')
 const reaction = new THREE.Mesh(
-    new THREE.BoxGeometry(3,3,3),
-    new THREE.MeshBasicMaterial({map: reactionTexture})
+    new THREE.BoxGeometry(3, 3, 3),
+    new THREE.MeshBasicMaterial({ map: reactionTexture })
 );
 
 scene.add(reaction);
@@ -180,10 +189,10 @@ bodyIcons.push(reaction)
 
 function generateBoxes() {
     for (let i = 1; i < 3; i++) {
-        const reactionTexture = new THREE.TextureLoader().load('../images/live.png')
+        const reactionTexture = new THREE.TextureLoader().load('../images/clogo.png')
         const reaction = new THREE.Mesh(
-            new THREE.BoxGeometry(3,3,3),
-            new THREE.MeshBasicMaterial({map: reactionTexture})
+            new THREE.BoxGeometry(3, 3, 3),
+            new THREE.MeshBasicMaterial({ map: reactionTexture })
         );
         const boxTarget = PAGE_SECTIONS[i];
         reaction.position.set(boxTarget.x, boxTarget.y, boxTarget.z);
@@ -244,9 +253,8 @@ window.addEventListener('click', () => {
 });
 
 // le bgm
-/*/
-const bgTexture = new THREE.TextureLoader().load('../images/bgtheme7.jpg')
-scene.background = bgTexture;*/
+
+
 
 // github logo
 const gitTexture = new THREE.TextureLoader().load('../images/github.png')
@@ -255,7 +263,7 @@ const gitTexture = new THREE.TextureLoader().load('../images/github.png')
 const gitGeometry = new THREE.CylinderGeometry(ICON_RADIUS, ICON_RADIUS, 0.5, 20)
 const github = new THREE.Mesh(
     gitGeometry,
-    new THREE.MeshBasicMaterial({map: gitTexture})
+    new THREE.MeshBasicMaterial({ map: gitTexture })
 );
 github.material.color.setHex(0xffffff);
 github.rotation.x += ICON_DEFAULT_ROTATION;
@@ -280,7 +288,7 @@ const linkGeometry = new THREE.CylinderGeometry(ICON_RADIUS, ICON_RADIUS, 0.5, 2
 
 const linkedin = new THREE.Mesh(
     linkGeometry,
-    new THREE.MeshBasicMaterial({map:linkTexture})
+    new THREE.MeshBasicMaterial({ map: linkTexture })
 );
 linkedin.rotation.x += ICON_DEFAULT_ROTATION;
 scene.add(linkedin);
@@ -307,7 +315,7 @@ const genkiTexture = new THREE.TextureLoader().load('../images/APA.png')
 const genkiGeometry = new THREE.SphereGeometry(ICON_RADIUS, 32, 16);
 const genki = new THREE.Mesh(
     genkiGeometry,
-    new THREE.MeshBasicMaterial({map: genkiTexture})
+    new THREE.MeshBasicMaterial({ map: genkiTexture })
 );
 genki.material.color.setHex(0xffffff);
 genki.rotation.x += 1.5;
@@ -329,7 +337,7 @@ window.addEventListener('click', () => {
 
     // If the cube was clicked, open the URL
     if (intersects.length > 0) {
-        window.location.href = '../game.html'; // non new tab 
+        window.location.href = 'https://www.ryan-dev.xyz/blog'; // non new tab 
     }
 });
 
@@ -350,7 +358,7 @@ scene.add(pointlight);
 
     */
 // {text: string, textSize: int, colour: hexcolour, position: {x: val, y:val, z: val}}
-function pleaseHelpMe({text, textSize, textColour, position}) {
+function pleaseHelpMe({ text, textSize, textColour, position }) {
     const outText = new Text();
 
     outText.text = text;
@@ -380,18 +388,18 @@ function fadeFromBottom(leText, offset = 20, delay = 0.5) {
 
     leText.fillOpacity = 0;
 
-    gsap.to(leText, { 
-        fillOpacity: 1, 
-        duration: 2, 
-        delay: delay, 
-        ease: "power2.out" 
+    gsap.to(leText, {
+        fillOpacity: 1,
+        duration: 2,
+        delay: delay,
+        ease: "power2.out"
     });
 
-    gsap.from(leText.position, { 
-        y: `-=${offset}`, 
-        duration: 2, 
-        delay: delay, 
-        ease: "power2.out" 
+    gsap.from(leText.position, {
+        y: `-=${offset}`,
+        duration: 2,
+        delay: delay,
+        ease: "power2.out"
     });
 }
 
@@ -407,7 +415,7 @@ function generateScroll(textCount = 5, spacing = 0) {
             position: GODOWN_POS
         });
 
-        tempText.position.x = (i*spacing);
+        tempText.position.x = (i * spacing);
         scrollGroup.add(tempText);
 
     }
@@ -423,23 +431,23 @@ function generateScroll(textCount = 5, spacing = 0) {
 // other potential params
 // colour, distance from camera (z), size, rotation, section it will be viewed in
 // AHHH I HATE JAVASCRIPT WHY DOES NAMING HAVE TO BE LIKE THIS FUUUUUUUUUUU
-function generateFont({font, text, positionDark, positionLight, positionSection,
+function generateFont({ font, text, positionDark, positionLight, positionSection,
     fontColour, zFactor, numShapes = 2, fontThickness = 0.1, fontRotation = 0
 }) {
 
     const color = new THREE.Color(fontColour);
 
     const matDark = new THREE.MeshBasicMaterial({
-    color: color,
-    opacity: TITLE_DSTART_OPACITY,
-    side: THREE.DoubleSide
+        color: color,
+        opacity: TITLE_DSTART_OPACITY,
+        side: THREE.DoubleSide
     });
 
     const matLite = new THREE.MeshBasicMaterial({
-    color: color,
-    transparent: true,
-    opacity: TITLE_LSTART_OPACITY,
-    side: THREE.DoubleSide
+        color: color,
+        transparent: true,
+        opacity: TITLE_LSTART_OPACITY,
+        side: THREE.DoubleSide
     });
 
     const message = text;
@@ -458,7 +466,7 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
     // LIGHT TEXT GENERATION
 
     const lightText = new THREE.Mesh(geometry, matLite);
-    
+
     lightText.position.set(0, -100, -100)
     lightText.rotation.y = fontRotation;
     scene.add(lightText);
@@ -471,18 +479,18 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
 
     for (let i = 0; i < shapes.length; i++) {
 
-    const shape = shapes[i];
+        const shape = shapes[i];
 
-    if (shape.holes && shape.holes.length > 0) {
+        if (shape.holes && shape.holes.length > 0) {
 
-        for (let j = 0; j < shape.holes.length; j ++) {
+            for (let j = 0; j < shape.holes.length; j++) {
 
-        const hole = shape.holes[j];
-        holeShapes.push(hole);
+                const hole = shape.holes[j];
+                holeShapes.push(hole);
+
+            }
 
         }
-
-    }
 
     }
 
@@ -515,20 +523,20 @@ function generateFont({font, text, positionDark, positionLight, positionSection,
     scene.add(strokeText);
 
     // move this animation somewhere so it transitions???
-    gsap.to(strokeText.position, { 
+    gsap.to(strokeText.position, {
         ...positionDark, // funny spread operator
-        duration: TITLE_ANIM_DURATION, 
-        ease: "power3.out" 
+        duration: TITLE_ANIM_DURATION,
+        ease: "power3.out"
     });
-    gsap.to(lightText.position, { 
+    gsap.to(lightText.position, {
         ...positionLight, // funny spread operator
-        duration: TITLE_ANIM_DURATION, 
-        ease: "power3.out" 
+        duration: TITLE_ANIM_DURATION,
+        ease: "power3.out"
     });
     gsap.to([matDark], { opacity: TITLE_DEND_OPACITY, duration: TITLE_ANIM_DURATION });
     gsap.to([matLite], { opacity: TITLE_LEND_OPACITY, duration: TITLE_ANIM_DURATION });
     renderer.render(scene, camera);
-    return {dark: matDark, light: matLite};
+    return { dark: matDark, light: matLite };
 
 }
 
@@ -537,8 +545,8 @@ function drawTitle() {
     loader.load('../fonts/Noto Sans JP_Regular.json', function(leFont) {
         generateFont({
             font: leFont,
-            text: "  Ryan.Dev    ", 
-            positionDark: TITLE_POS, 
+            text: "  Ryan.Dev    ",
+            positionDark: TITLE_POS,
             positionLight: TITLE_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
@@ -548,12 +556,12 @@ function drawTitle() {
         });
         generateFont({
             font: leFont,
-            text: "  ライアン    ", 
+            text: "  ライアン    ",
             positionDark: {
                 x: TITLE_POS.x,
                 y: TITLE_POS.y - 5,
                 z: TITLE_POS.z
-            }, 
+            },
             positionLight: {
                 x: TITLE_LIGHT_POS.x,
                 y: TITLE_LIGHT_POS.y - 5.5,
@@ -567,8 +575,8 @@ function drawTitle() {
         });
         generateFont({
             font: leFont,
-            text: '  Course\nReview    ', 
-            positionDark: REVIEW_POS, 
+            text: '  Course\nReview    ',
+            positionDark: REVIEW_POS,
             positionLight: REVIEW_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
@@ -578,8 +586,8 @@ function drawTitle() {
         });
         generateFont({
             font: leFont,
-            text: '  APA Game    ', 
-            positionDark: GAME_POS, 
+            text: '  My Blog    ',
+            positionDark: GAME_POS,
             positionLight: GAME_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
@@ -590,8 +598,8 @@ function drawTitle() {
         });
         generateFont({
             font: leFont,
-            text: '  Socials    ', 
-            positionDark: SOCIAL_POS, 
+            text: '  Socials    ',
+            positionDark: SOCIAL_POS,
             positionLight: SOCIAL_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
@@ -671,7 +679,7 @@ function checkHover() {
             reactLabel.visible = true;
         }
         scaleChamith();
-        document.body.style.cursor = 'pointer'; 
+        document.body.style.cursor = 'pointer';
     } else {
         // HOVER IS INACTIVE
         reaction.material.color.setHex(0xffffff); // white
@@ -772,12 +780,12 @@ function goToPrevSection() {
 // create task manager lmao
 // basically runs the function
 Observer.create({
-  target: window,
-  type: "wheel,touch",
-  preventDefault: true,
-  onDown: () => goToNextSection(),
-  onUp: () => goToPrevSection(),
-  tolerance: 30 // Prevent accidental tiny movements
+    target: window,
+    type: "wheel,touch",
+    preventDefault: true,
+    onDown: () => goToNextSection(),
+    onUp: () => goToPrevSection(),
+    tolerance: 30 // Prevent accidental tiny movements
 });
 
 // animate
@@ -795,7 +803,7 @@ function animate() {
 
 
     renderer.render(scene, camera);
-    
+
     labelRenderer.render(scene, camera);
 }
 
@@ -819,7 +827,7 @@ function arrIconsTwo() {
     reaction.position.set(4, reviewPos.pos.y, 0);
 
     const gamePos = PAGE_SECTIONS[GAME_INDEX];
-    genki.position.set(gamePos.pos.x, gamePos.pos.y-1, -5);
+    genki.position.set(gamePos.pos.x, gamePos.pos.y - 1, -5);
 
     const otherPos = PAGE_SECTIONS[SOCIAL_INDEX];
     github.position.set(-4 + otherPos.pos.x, otherPos.pos.y, -5);

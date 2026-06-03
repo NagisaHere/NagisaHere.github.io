@@ -1,62 +1,493 @@
-#navbar__title {
-    font-size: 24px;
-    font-weight: bold;
+/* Base */
+* {
+    box-sizing: border-box; /* basically content consumed space takes space */
+    margin: 0; 
+    padding: 0;
+}
+
+/* Shared components */
+/* This is to disable the blue hypertext thingies */
+a {
+    text-decoration: none; 
+}
+
+a:visited {
     text-decoration: none;
     color: black;
 }
 
-.body {
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto 30px auto;
+}
+
+.dev__logo {
+    font-weight: normal;
+    font-size: 1.8rem;
+    text-decoration: none;
+}
+
+/* Shared fade animation base */
+.hidden {
+    opacity: 0;
+    filter: blur(5px);
+    transition: all 1s;
+}
+
+.show {
+    opacity: 1;
+    filter: blur(0);
+}
+
+/* === Page: home (3D) === */
+@font-face {
+    font-family: "Futura";
+    src: url(../fonts/FuturaCyrillicMedium.ttf);
+}
+
+/* thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
+html:has(body.page-home),
+body.page-home {
+    scrollbar-width: none; /* hide scroll*/
+    overflow: hidden;
+}
+
+body.page-home {
+    font-family: "Noto Sans JP", "Futura", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body.page-home {
+    --dark-bg: rgba(15, 15, 15, 0.6);
+    --spacing: 350px;
+}
+
+/* used for hovered text over 3d objects */
+body.page-home .label {
+    color: white;
+    font-family: sans-serif;
+    font-size: 30px;
+    padding: 2px 6px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    margin-top: -1em;
+    /* transition: transform 0.3s ease-in-out */
+}
+/* doesnt seem to like to work with 3d stuff hmmmmm
+body.page-home .label:hover {
+    transform: scale(1.05)
+}*/
+
+body.page-home canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+/* attemped stuff but all of this is basically pointless
+* lmao */
+
+body.page-home main {
+    color: white;
+    z-index: 99;
+    position: absolute;
+    margin: 0px auto;
+    width: 100%;
+    margin-top: 40vh;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 100px;
+}
+
+body.page-home h1 {
+    color: black;
+    background: var(--dark-bg);
+}
+
+body.page-home .about__title {
+    grid-column: span 3 / span 3;
+    margin-bottom: var(--spacing);
+}
+
+body.page-home .about__description__container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2vh 2vh;
+    grid-column-start: 3;
+    grid-column: span 3 / span 3;
+}
+
+body.page-home .test {
+    padding-top: 100vh;
+    background-color: 0xfcfde2; /* same as 3d background*/
+}
+
+/* END HOME SECITON*/
+
+/* REVIEW PAGE SECTION */
+body.page-review {
+    font-family: "Noto Sans JP", Arial, sans-serif;
+    padding: 20px;
+    background-color: #fafafa;
+}
+
+/* flex grow basically ranks how much space something takes; higher number = more space */
+body.page-review .titles {
+    text-align: center;
+    flex-grow: 1;
+}
+
+body.page-review .titles h2 {
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+body.page-review .grid-container {
+    display: grid;
+    /* This creates 2 columns that take up equal fractions (1fr) of the space */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 20px auto; /* Centers the grid on the page */
+}
+
+/* Individual Card Styling */
+body.page-review .card {
+    background-color: #167ebc;
+    border: 3px solid black;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between; /* Pushes text to the left and image to the right */
+    align-items: flex-start;
+    transition: transform 0.3s ease-in-out;
+}
+
+body.page-review .card:hover {
+    transform: scale(1.05);
+}
+
+body.page-review .card h3 {
+    color: black;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+body.page-review .card p {
+    color: black;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+/* Image styling for the first card */
+body.page-review .card-image {
+    width: 80px; /* Adjust size later */
+    height: auto;
+    border: 1px solid white;
+}
+
+/* this anim was largely thanks to
+https://www.youtube.com/watch?v=T33NN_pPeNI */
+body.page-review .grid-container .hidden {
+    transform: translateY(100%);
+}
+
+body.page-review .grid-container .show {
+    transform: translateY(0);
+}
+
+body.page-review .grid-container .card:nth-child(2) {
+    transition-delay: 200ms;
+}
+
+/* use linear gradient to cheat lower opacity */
+body.page-review #card-CSSE2010 {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/2010_bg.png');
+    background-size: 100% auto;
+}
+
+body.page-review #card-CSSE3010 {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/3010_bg.png');
+    background-size: 100% auto;
+}
+
+body.page-review #card-CSSE2310 {
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/2310_bg.png');
+    background-size: 100% auto;
+}
+
+/* this one is really annoying bruh */
+body.page-review #card-CSSE1001 {
+    background-color: black;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../images/1001_bg2.jpg');
+    background-size: 50% auto;
+    /* background-position: left 100px bottom 100px; */
+}
+
+@media (max-width: 650px) {
+    /* Changes the grid from 2 columns to 1 column for mobile */
+    body.page-review .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    /* Stacks the header items vertically so they don't squish */
+    body.page-review .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+/* COURSE DETAIL PAGE SECTION (per course styling)*/
+@font-face {
+    font-family: "Noto Sans JP";
+    src: url(../fonts/Noto_Sans_JP/static/NotoSansJP-Regular.ttf) format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap; /* default font until it loads */
+}
+
+@font-face {
+    font-family: "Noto Sans JP";
+    src: url(../fonts/Noto_Sans_JP/static/NotoSansJP-SemiBold.ttf) format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Noto Sans JP";
+    src: url(../fonts/Noto_Sans_JP/static/NotoSansJP-Bold.ttf) format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+body.page-course {
+    font-family: "Noto Sans JP", system-ui, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #1a1a1a;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+body.page-course .site-title {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+/* mmm breadcrumbs */
+/* why is site hierarchy just breadcrumbs anyways??? */
+body.page-course .course__breadcrumb__container {
+    padding: 10px 20px;
+    color: grey;
+}
+
+/* Top Information Section */
+body.page-course .top-section {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+body.page-course .info-panel {
+    background-color: #d9d9d9;
+    flex: 3;
+    padding: 20px;
+}
+
+body.page-course .info-panel h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+body.page-course .info-panel p {
+    font-size: 1.4rem;
+    margin: 8px 0;
+}
+
+/* Instructor/ECP Panel */
+body.page-course .side-panel {
+    background-color: #d9d9d9;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+body.page-course .side-panel img {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+body.page-course .side-panel a {
+    font-size: 1.5rem;
+    color: black;
+    text-decoration: none;
+}
+
+body.page-course .side-panel a:hover {
+    text-decoration: underline;
+}
+
+/* Description Section of course */
+body.page-course .description-panel {
+    background-color: #d9d9d9;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+body.page-course .description-panel p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+body.page-course .description-panel p:last-child {
+    margin-bottom: 0;
+}
+
+/* Bottom Diagrams Section */
+body.page-course .diagrams-section {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-}
-
-/* wrap allows multiple items to be displayed in a row */
-.body__container {
-    display: flex;
-    flex-direction: row;
+    align-items: flex-start;
     flex-wrap: wrap;
-    height: 80%;
-    width: 80%;
-    background-color: aqua;
-    /* each child will try to be one third of the container and wrap as needed */
+    gap: 40px;
 }
 
-.body__list {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
+body.page-course .course__incompatible {
+    background-color: #d8706f;
+    border-radius: 20px;
+    padding: 24px 28px;
+    min-width: 200px;
+    max-width: 260px;
+    color: #1a1a1a;
+    text-align: left;
 }
 
-/* images in figma were about 174 by 174 ish  with the exception of the genki mf
-radius was 46*/
-.body__item {
+body.page-course .course__incompatible__title {
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+body.page-course .course__incompatible__list {
+    list-style: none;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+body.page-course .course__incompatible__or {
+    display: block;
+    font-weight: 400;
+}
+
+body.page-course .course__flow-diagram {
+    flex: 1;
+    min-width: 280px;
+    max-width: 420px;
     display: flex;
-    flex-direction: row;
+    justify-content: center;
+}
+
+body.page-course .flow-diagram {
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center; /* center content horizontally */
-    gap: 10px;
-    border: 2px solid black;
-    border-radius: 46px;
-    box-sizing: border-box;
-    width: 300px;
-    height: 300px;
 }
 
-.body__item a {
-    font-size: 40px;
-    font-weight: bold;
-    text-decoration: none;
-    color: black;
-}
-.body__image {
-    width: 100px;
-    height: 100px;
+body.page-course .flow-diagram__node {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 14px 20px;
+    min-width: 150px;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: #1a1a1a;
 }
 
-/* linkedin 0D7AB6 */
-/* genki D9FFDC */
-/* apa game thing FFE7D9 */
-/* course rev EEFF8E */
+
+body.page-course .flow-diagram__node--prereq {
+    background-color: #e6e66d;
+}
+
+body.page-course .flow-diagram__node--current {
+    background-color: #70a1c8;
+}
+
+body.page-course .flow-diagram__node--child {
+    background-color: #77bc65;
+}
+
+body.page-course .flow-diagram__line {
+    width: 2px;
+    background-color: #000;
+}
+
+body.page-course .flow-diagram__line--down {
+    height: 28px;
+}
+
+body.page-course .flow-diagram__split {
+    display: block; /* its a block (flex but kinnnda centered)*/
+    overflow: visible;
+    margin-top: -1px;
+}
+
+body.page-course .flow-diagram__children {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    width: 100%;
+    margin-top: -2px;
+}
+
+
+@media (max-width: 700px) {
+    body.page-course .diagrams-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    body.page-course .course__flow-diagram {
+        width: 100%;
+    }
+
+    body.page-course .flow-diagram__children {
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+}
+
+body.page-course .hidden {
+    transform: translateX(-100%);
+
+}
+
+body.page-course .show {
+    transform: translateX(0);
+}
+

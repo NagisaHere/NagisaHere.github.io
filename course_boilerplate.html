@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ryan.dev - CSSE2010</title>
-    <link rel="stylesheet" href="./css/review_boilerplate.css">
+    <link rel="stylesheet" href="./css/style.css">
     <style>
 
     </style>
 </head>
-<body>
+<body class="page-course">
 
     <h1 class="site-title">Ryan.dev</h1>
 
@@ -37,10 +37,35 @@
         <p>Recommended to take an easy course alongside your semester if you want to do well, unless you have prior experience.</p>
     </div>
 
-    <div class="diagrams-section">
-        <img src="incompatibilities_diagram.png" alt="Incompatible courses: COMP1300, COMP2303, COMP2302, CSSE1000, CSSE7035, CSSE7201, ELEC2002">
-        
-        <img src="course_flow_diagram.png" alt="Prerequisite flow: CSSE1001/ENGG1001 to CSSE2010, then to CSSE3010 and CSSE2310">
+    <div class="diagrams-section hidden">
+        <aside class="course__incompatible" aria-label="Incompatible courses">
+            <p class="course__incompatible__title">Incompatible:</p>
+            <ul class="course__incompatible__list">
+                <li>COMP1300<span class="course__incompatible__or">or</span></li>
+                <li>COMP2303<span class="course__incompatible__or">or</span></li>
+                <li>COMP2302<span class="course__incompatible__or">or</span></li>
+                <li>CSSE1000<span class="course__incompatible__or">or</span></li>
+                <li>CSSE7035<span class="course__incompatible__or">or</span></li>
+                <li>CSSE7201<span class="course__incompatible__or">or</span></li>
+                <li>ELEC2002</li>
+            </ul>
+        </aside>
+        <div class="course__flow-diagram" role="img" aria-label="Prerequisite flow: CSSE1001 or ENGG1001 to CSSE2010, then to CSSE3010 and CSSE2310">
+            <div class="flow-diagram">
+                <div class="flow-diagram__node flow-diagram__node--prereq">CSSE1001/<br>ENGG1001</div>
+                <div class="flow-diagram__line flow-diagram__line--down flow-diagram__line--prereq"></div>
+                <div class="flow-diagram__node flow-diagram__node--current">CSSE2010</div>
+                <svg class="flow-diagram__split" width="220" height="40" aria-hidden="true">
+                    <line x1="110" y1="0" x2="110" y2="18" stroke="#000" stroke-width="2"/>
+                    <line x1="110" y1="18" x2="55" y2="40" stroke="#000" stroke-width="2"/>
+                    <line x1="110" y1="18" x2="165" y2="40" stroke="#000" stroke-width="2"/>
+                </svg>
+                <div class="flow-diagram__children">
+                    <div class="flow-diagram__node flow-diagram__node--child">CSSE3010</div>
+                    <div class="flow-diagram__node flow-diagram__node--child">CSSE2310</div>
+                </div>
+            </div>
+        </div>
     </div>
 
 </body>

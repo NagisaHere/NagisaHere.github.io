@@ -1,0 +1,26 @@
+Gemini was used to generate the background images for the coursework.
+STM32: https://gemini.google.com/share/d7a35b463dbd (March 3rd)
+AVR: https://gemini.google.com/share/cac4af13c57e (March 3rd)
+terminal: https://www.dreamstime.com/program-code-matrix-black-background-animation-green-text-set-codes-providing-matrix-database-large-green-matrix-image222692332 (March 3rd)
+python: https://medium.com/@munyaokelvin/args-and-kwargs-in-python-750e0b18564e (March 3rd)
+
+Gemini was also used to give examples of how the GSAP animation worked.
+https://gemini.google.com/app/48e9f7684395efee
+(March 8th)
+
+Gemini also generated the basic html and css for the course review page. (March 8th)
+https://gemini.google.com/app/659a1ef3eab82ba7
+
+
+The hide animation was taken inspiration from this video.
+https://www.youtube.com/watch?v=T33NN_pPeNI (March 1st)
+
+The three.js library was used to make the landing page.
+general documentation
+https://threejs.org/docs (March 1st)
+    - SVG example -> https://threejs.org/examples/#webgl_geometry_text_stroke (March 3rd)
+    - troika-three-text -> https://protectwise.github.io/troika/troika-three-text/ (March 5th)
+    - fireship tutorial on threejs -> https://www.youtube.com/watch?v=Q7AOvWpIVHU (March 1st)
+
+The rest of the code was structured myself. I hate javascript.
+Please don't ask why I have a big dictionary as a function parameter. It's the only way I could think of to pass in named parameters.
