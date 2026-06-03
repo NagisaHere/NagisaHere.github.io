@@ -69,12 +69,12 @@ const TITLE_DSTART_OPACITY = 0;
 const TITLE_DEND_OPACITY = 1;
 const TITLE_ANIM_DURATION = 3;
 
-<<<<<<< HEAD
 // splash screen image blocks (near title; tweak pos/rot as needed)
+// "about the bottom is -6, about left is -14"
 const SPLASH_BLOCK_SIZE = 1.5;
-const SPLASH_ESP32_POS = { x: -7, y: 2, z: 2 };
+const SPLASH_ESP32_POS = { x: -14, y: 2, z: 2 };
 const SPLASH_ESP32_ROT = { x: 0.15, y: 0.35, z: 0 };
-const SPLASH_BLOCK_IMG_POS = { x: 7, y: 2, z: 2 };
+const SPLASH_BLOCK_IMG_POS = { x: 12, y: 2, z: 2 };
 const SPLASH_BLOCK_IMG_ROT = { x: -0.1, y: -0.4, z: 0 };
 const SPLASH_JP_POS = { x: -5, y: -6, z: 3 };
 const SPLASH_JP_ROT = { x: 0, y: 0.6, z: 0 };
@@ -82,15 +82,19 @@ const SPLASH_GFL2_POS = { x: 5, y: -6, z: 3 };
 const SPLASH_GFL2_ROT = { x: 0, y: -0.5, z: 0 };
 const SPLASH_ENDFIELD_POS = { x: -4, y: -1, z: 2 };
 const SPLASH_ENDFIELD_ROT = { x: 0.2, y: 0.25, z: 0 };
-const SPLASH_CHINA_POS = { x: 4, y: -2, z: 2 };
+const SPLASH_CHINA_POS = { x: 10, y: -2, z: 2 };
 const SPLASH_CHINA_ROT = { x: -0.15, y: -0.3, z: 0 };
-const SPLASH_RCBAKERY_POS = { x: 0, y: -1, z: 1 };
+const SPLASH_RCBAKERY_POS = { x: -10, y: -1, z: 1 };
 const SPLASH_RCBAKERY_ROT = { x: 0.1, y: 0, z: 0.1 };
 
+const SPLASH_BLOCK_ANIM_DELAY = TITLE_ANIM_DURATION + 0.5;
+const SPLASH_BLOCK_RISE_OFFSET = 20;
+const SPLASH_BLOCK_RISE_DURATION = 1.2;
+const SPLASH_BLOCK_BOB_AMOUNT = 0.25;
+const SPLASH_BLOCK_BOB_DURATION = 2;
+const SPLASH_BLOCK_STAGGER = 0.08;
+
 const GODOWN_POS = {x: 0, y: -10, z: 1};
-=======
-const GODOWN_POS = { x: 0, y: -10, z: 1 };
->>>>>>> main
 
 // second text
 const REVIEW_POS = { x: -5, y: -46, z: -5 };
@@ -227,7 +231,7 @@ const SPLASH_BLOCKS = [
     { position: SPLASH_RCBAKERY_POS, rotation: SPLASH_RCBAKERY_ROT, imagePath: '../images/rcbakery.png' },
 ];
 
-SPLASH_BLOCKS.forEach(createSplashBlock);
+const splashBlockMeshes = SPLASH_BLOCKS.map(createSplashBlock);
 
 // make text label for the text
 const reactDiv = document.createElement('div');
@@ -309,7 +313,7 @@ window.addEventListener('click', () => {
 
 
 // genki thingy
-const genkiTexture = new THREE.TextureLoader().load('../images/APA.png')
+const genkiTexture = new THREE.TextureLoader().load('../images/dinergate.png')
 //const genkiGeometry = new THREE.ExtrudeGeometry(new THREE.CircleGeometry(2, 32));
 //const genkiGeometry = new THREE.CircleGeometry(2, 32);
 const genkiGeometry = new THREE.SphereGeometry(ICON_RADIUS, 32, 16);
@@ -400,6 +404,33 @@ function fadeFromBottom(leText, offset = 20, delay = 0.5) {
         duration: 2,
         delay: delay,
         ease: "power2.out"
+    });
+}
+
+function animateSplashBlocks(blocks) {
+    blocks.forEach((block, index) => {
+        const targetY = block.position.y;
+        block.position.y = targetY - SPLASH_BLOCK_RISE_OFFSET;
+
+        gsap.to(block.position, {
+            y: targetY,
+            duration: SPLASH_BLOCK_RISE_DURATION,
+            delay: SPLASH_BLOCK_ANIM_DELAY + index * SPLASH_BLOCK_STAGGER,
+            ease: "power2.out",
+            onComplete: () => {
+                const halfBob = SPLASH_BLOCK_BOB_AMOUNT / 2;
+                gsap.fromTo(block.position,
+                    { y: targetY - halfBob },
+                    {
+                        y: targetY + halfBob,
+                        duration: SPLASH_BLOCK_BOB_DURATION,
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut",
+                    }
+                );
+            },
+        });
     });
 }
 
@@ -835,6 +866,7 @@ function arrIconsTwo() {
 }
 
 drawTitle();
+animateSplashBlocks(splashBlockMeshes);
 //arrIcons()
 arrIconsTwo()
 // call animate to the display
