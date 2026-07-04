@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryan.dev</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script type="module" src="./js/observe.js"></script>
+</head>
+<body class="page-course">
+
+    <header class="header">
+        <a class="dev__logo" href="./index.html">Ryan.dev</a>
+    </header>
+    <!-- parent/course  -->
+    <nav class="course__breadcrumb__container">
+        <a href="./review.html" class="course__breadcrumb_root">Courses</a>
+        <!-- span is an inline element, no newline -->
+        <span class="course__breadcrumb__sep">/</span>
+        <span class="course__breadcrumb__current">CSSE2310</span>
+    </nav>
+    <div class="top-section">
+        <div class="info-panel hidden">
+            <h2>CSSE2310 - Computer Systems Principles and Programming</h2>
+            <p>Overall: 7/10</p>
+            <p>Difficulty: 8/10</p>
+            <p>Workload: 10-15hr/week</p>
+            <p>Year Taken: 2025 Sem 1</p>
+        </div>
+        
+        <div class='side-panel hidden'>
+            <img src="./assets/images/live.png" alt="Reaction" class="card-image">
+            <a href="https://programs-courses.uq.edu.au/course.html?course_code=CSSE2310" target="_blank">ECP</a>
+        </div>
+    </div>
+
+    <div class="description-panel hidden">
+        <p>Core course for Electrical Engineers, and a must do for Software Engineering</p>
+        <p>You will heavily learn C programming for CLI interfacing, breakpoint debugging, multi-process programming, and client/server programming.
+            <br> You will also program in a remote server environment connected via ssh, executing linux commands and editing code using vim.</p>
+        <p>This is an extremely high workload course. Good luck.</p>
+
+    </div>
+
+    <div class="diagrams-section hidden">
+        <aside class="course__incompatible" aria-label="Incompatible courses">
+            <p class="course__incompatible__title">Incompatible:</p>
+            <ul class="course__incompatible__list">
+                <li>COMP2303<span class="course__incompatible__or">or</span></li>
+                <li>COMP7306<span class="course__incompatible__or">or</span></li>
+                <li>CSSE7231</li>
+            </ul>
+        </aside>
+        <div class="course__flow-diagram" role="img" aria-label="Prerequisite flow: CSSE2010 to CSSE2310">
+            <div class="flow-diagram flow-diagram--leaf">
+                <div class="flow-diagram__node flow-diagram__node--prereq">CSSE2010</div>
+                <div class="flow-diagram__line flow-diagram__line--down flow-diagram__line--prereq"></div>
+                <div class="flow-diagram__node flow-diagram__node--current">CSSE2310</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
