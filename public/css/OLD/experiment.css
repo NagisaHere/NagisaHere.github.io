@@ -1,0 +1,79 @@
+@font-face {
+    font-family: "Futura";
+    src: url(../assets/fonts/FuturaCyrillicMedium.ttf);
+}
+/*  thanks https://stackoverflow.com/questions/20997183/how-to-hide-scrollbar-in-firefox */
+body, html {
+    scrollbar-width: none;
+    overflow: hidden
+}
+
+:root {
+  --dark-bg: rgba(15, 15, 15, 0.6);
+  --spacing: 350px;
+
+  font-family: "Futura";
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* used for hovered text over 3d objects */
+.label {
+    color: white;
+    font-family: sans-serif;
+    font-size: 30px;
+    padding: 2px 6px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 4px;
+    margin-top: -1em;
+    /* transition: transform 0.3s ease-in-out */
+}
+/* doesnt seem to like to work with 3d stuff hmmmmm 
+.label:hover {
+    transform: scale(1.05)
+}*/
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+main {
+  color: white;
+  z-index: 99;
+  position: absolute;
+  margin: 0px auto;
+  width: 100%;
+  margin-top: 40vh;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 100px;
+}
+
+h1 {
+    color: black;
+    background: var(--dark-bg);
+}
+
+.about__title {
+    grid-column: span 3 / span 3;
+    margin-bottom: var(--spacing);
+   
+}
+
+.about__description__container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2vh 2vh;
+    grid-column-start: 3;
+    grid-column: span 3 / span 3;
+}   
+
+.about__description {
+
+}
+
+.test {
+    padding-top: 100vh;
+    background-color: aqua;
+}
