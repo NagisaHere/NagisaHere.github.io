@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js'; // used for title
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'; // for debug movement
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js' // for attaching css to 3d objects
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js'; //  text to svg moment
@@ -42,9 +43,9 @@ const MOBILE_THRESHOLD = 768;
 var whichPage = 0;
 const PAGE_SECTIONS = [
     { pos: { x: 0, y: 0, z: CAM_START_Z }, label: "Home" },
-    { pos: { x: 0, y: -50, z: 10 }, label: "Course Review" },
-    { pos: { x: 10, y: -100, z: 5 }, label: "Game" },
-    { pos: { x: 10, y: -150, z: 5 }, label: "Social" }
+    { pos: { x: 10, y: -50, z: 5 }, label: "Blog" },
+    { pos: { x: 10, y: -100, z: 5 }, label: "Social" },
+    { pos: { x: 0, y: -150, z: 10 }, label: "Course Review" }
 ];
 
 // keyboard customisation thingy?
@@ -53,9 +54,9 @@ const PROJECT_PAGES = [
     { pos: {} },
 ];
 
-const REVIEW_INDEX = 1;
-const GAME_INDEX = 2;
-const SOCIAL_INDEX = 3;
+const BLOG_INDEX = 1;
+const SOCIAL_INDEX = 2;
+const REVIEW_INDEX = 3;
 
 
 // how thick title is 
@@ -97,11 +98,11 @@ const SPLASH_BLOCK_STAGGER = 0.08;
 const GODOWN_POS = {x: 0, y: -10, z: 1};
 
 // second text
-const REVIEW_POS = { x: -5, y: -46, z: -5 };
-const REVIEW_LIGHT_POS = { x: -5, y: -44, z: -5 };
+const BLOG_POS = { x: 10, y: -45, z: -10 };
+const BLOG_LIGHT_POS = { x: PAGE_SECTIONS[BLOG_INDEX].pos.x, y: -46.5, z: -10 };
 
-const GAME_POS = { x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -95, z: -10 };
-const GAME_LIGHT_POS = { x: PAGE_SECTIONS[GAME_INDEX].pos.x, y: -96.5, z: -10 }
+const REVIEW_POS = { x: -5, y: -146, z: -5 };
+const REVIEW_LIGHT_POS = { x: -5, y: -144, z: -5 };
 
 const SOCIAL_POS = {
     x: PAGE_SECTIONS[SOCIAL_INDEX].pos.x - 1,
@@ -114,6 +115,12 @@ const SOCIAL_LIGHT_POS = {
     y: PAGE_SECTIONS[SOCIAL_INDEX].pos.y + 4,
     z: PAGE_SECTIONS[SOCIAL_INDEX].pos.z - 15
 }
+
+const BLOG_MODEL_POS = {
+    x: PAGE_SECTIONS[BLOG_INDEX].pos.x,
+    y: PAGE_SECTIONS[BLOG_INDEX].pos.y - 1,
+    z: -5,
+};
 
 const DEBUG = false;
 const GENERATE_ITEMS = true;
@@ -137,6 +144,9 @@ const renderer = new THREE.WebGLRenderer({
 
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
 
 
 // 2d rendered for text
@@ -312,49 +322,87 @@ window.addEventListener('click', () => {
 
 
 
-// genki thingy
-const genkiTexture = new THREE.TextureLoader().load('/assets/images/dinergate.png')
-//const genkiGeometry = new THREE.ExtrudeGeometry(new THREE.CircleGeometry(2, 32));
-//const genkiGeometry = new THREE.CircleGeometry(2, 32);
-const genkiGeometry = new THREE.SphereGeometry(ICON_RADIUS, 32, 16);
-const genki = new THREE.Mesh(
-    genkiGeometry,
-    new THREE.MeshBasicMaterial({ map: genkiTexture })
-);
-genki.material.color.setHex(0xffffff);
-genki.rotation.x += 1.5;
-scene.add(genki);
-bodyIcons.push(genki)
+// dinergate blog model
+let dinergate = null;
+const gltfLoader = new GLTFLoader();
+gltfLoader.load('/assets/models/dinergate_type_ro.glb', (gltf) => {
+    dinergate = gltf.scene;
+    dinergate.traverse((child) => {
+        if (!child.isMesh) return;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        mats.forEach((mat) => {
+            if (!mat) return;
+            if (mat.map) mat.map.colorSpace = THREE.SRGBColorSpace;
+            if (mat.emissiveMap) mat.emissiveMap.colorSpace = THREE.SRGBColorSpace;
+        });
+    });
+    const box = new THREE.Box3().setFromObject(dinergate);
+    const size = box.getSize(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const modelScale = (ICON_RADIUS * 2) / maxDim;
+    dinergate.scale.set(modelScale, modelScale, modelScale);
+    //dinergate.rotation.x += 1.5;
+    scene.add(dinergate);
+    bodyIcons.push(dinergate);
 
-gsap.to(genki.rotation, {
-    y: Math.PI * 2,
-    duration: 4,
-    repeat: -1,
-    ease: "none"
+    gsap.to(dinergate.rotation, {
+        y: Math.PI * 2,
+        duration: 4,
+        repeat: -1,
+        ease: "none"
+    });
+
+    arrIconsTwo();
+    updateBlogLighting();
 });
 
 // make it clickable
 window.addEventListener('click', () => {
-    // Fire the raycaster at the exact moment of the click
+    if (!dinergate) return;
     raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects([genki]);
+    const intersects = raycaster.intersectObjects([dinergate], true);
 
-    // If the cube was clicked, open the URL
     if (intersects.length > 0) {
-        window.location.href = 'https://www.ryan-dev.xyz/blog'; // non new tab 
+        window.location.href = 'https://www.ryan-dev.xyz/blog';
     }
 });
 
 
 
 // LIGHTING SECTION
-// amb light is universal, point is projected from a point
-const pointlight = new THREE.PointLight(0xffffff);
+const pointlight = new THREE.PointLight(0xffffff, 1, 0, 2);
 pointlight.position.set(10, 10, 10);
 
-const ambLight = new THREE.AmbientLight(0xffffff);
+const ambLight = new THREE.AmbientLight(0xffffff, 0.45);
+scene.add(ambLight);
 
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8a8a8a, 0.35);
+scene.add(hemiLight);
+
+const roLight = new THREE.SpotLight(0xffffff, 120, 120, Math.PI / 5, 0.35, 1);
+const blogFillLight = new THREE.PointLight(0xffffff, 40, 60, 2);
+
+let roLightHelper;
+if (DEBUG) {
+    roLightHelper = new THREE.SpotLightHelper(roLight);
+    scene.add(roLightHelper);
+}
+
+scene.add(roLight);
+scene.add(roLight.target);
+scene.add(blogFillLight);
 scene.add(pointlight);
+
+function updateBlogLighting() {
+    const target = new THREE.Vector3(BLOG_MODEL_POS.x, BLOG_MODEL_POS.y, BLOG_MODEL_POS.z);
+    roLight.target.position.copy(target);
+    roLight.position.set(target.x + 2, target.y + 10, target.z + 18);
+    blogFillLight.position.set(target.x - 6, target.y + 4, target.z + 8);
+}
+
+updateBlogLighting();
 /* generate title font */
 /* text: string
     positionDark/positionLight/Section: {x: val, y: val, z: val} 
@@ -606,20 +654,9 @@ function drawTitle() {
         });
         generateFont({
             font: leFont,
-            text: '  Course\nReview    ',
-            positionDark: REVIEW_POS,
-            positionLight: REVIEW_LIGHT_POS,
-            positionSection: NaN,
-            fontColour: 0x006699,
-            zFactor: NaN,
-            numShapes: 2,
-            fontRotation: 0.5
-        });
-        generateFont({
-            font: leFont,
             text: '  My Blog    ',
-            positionDark: GAME_POS,
-            positionLight: GAME_LIGHT_POS,
+            positionDark: BLOG_POS,
+            positionLight: BLOG_LIGHT_POS,
             positionSection: NaN,
             fontColour: 0x006699,
             zFactor: NaN,
@@ -638,6 +675,17 @@ function drawTitle() {
             numShapes: 2,
             fontThickness: 0.08,
             fontRotation: 0
+        });
+        generateFont({
+            font: leFont,
+            text: '  Course\nReview    ',
+            positionDark: REVIEW_POS,
+            positionLight: REVIEW_LIGHT_POS,
+            positionSection: NaN,
+            fontColour: 0x006699,
+            zFactor: NaN,
+            numShapes: 2,
+            fontRotation: 0.5
         });
     }); //end load function
     /*let downText = pleaseHelpMe({
@@ -687,41 +735,68 @@ function addLabel(labelName, objToLabel) {
 }
 
 
-var scaled = false;
-var scaleDirection = false; // true to go big and false to go small ig
-var scaleFactor = ICON_DEFAULT_SCALE;
+function createHoverState() {
+    return {
+        scaled: false,
+        scaleDirection: false,
+        scaleFactor: ICON_DEFAULT_SCALE,
+    };
+}
+
+const reactionHoverState = createHoverState();
+const githubHoverState = createHoverState();
+const linkedinHoverState = createHoverState();
+
+function scaleHoverObject(obj, hoverState) {
+    if (hoverState.scaleDirection) {
+        hoverState.scaleFactor += ICON_SCALE_DIFF;
+        if (hoverState.scaleFactor > ICON_SCALE_FACTOR) {
+            hoverState.scaleDirection = !hoverState.scaleDirection;
+        }
+    } else {
+        hoverState.scaleFactor -= ICON_SCALE_DIFF;
+        if (hoverState.scaleFactor < ICON_DEFAULT_SCALE) {
+            hoverState.scaleDirection = !hoverState.scaleDirection;
+        }
+    }
+    obj.scale.set(hoverState.scaleFactor, hoverState.scaleFactor, hoverState.scaleFactor);
+}
+
+function checkHoverForObject(obj, hoverState, { label = null } = {}) {
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects([obj]);
+
+    if (intersects.length > 0) {
+        if (!hoverState.scaled) {
+            hoverState.scaled = true;
+            if (label) label.visible = true;
+        }
+        scaleHoverObject(obj, hoverState);
+        return true;
+    }
+
+    if (hoverState.scaled) {
+        obj.scale.set(ICON_DEFAULT_SCALE, ICON_DEFAULT_SCALE, ICON_DEFAULT_SCALE);
+        hoverState.scaleFactor = ICON_DEFAULT_SCALE;
+        hoverState.scaled = false;
+        if (label) label.visible = false;
+    }
+    return false;
+}
 
 // handle hover scaling
 function checkHover() {
-    // update raycast from cam to mouse
-    raycaster.setFromCamera(mouse, camera);
+    const hovered = [
+        checkHoverForObject(reaction, reactionHoverState, { label: reactLabel }),
+        checkHoverForObject(github, githubHoverState),
+        checkHoverForObject(linkedin, linkedinHoverState),
+    ].some(Boolean);
 
-    // Calculate objects intersecting the picking ray
-    // pass array of objs we want to check for
-    const intersects = raycaster.intersectObjects([reaction]);
-
-    if (intersects.length > 0) {
-        // HOVER IS ACTIVE
-        // this shouldnt activate on first load
-        if (!scaled) {
-
-            //reaction.scale.set(ICON_SCALE_FACTOR, ICON_SCALE_FACTOR, ICON_SCALE_FACTOR);
-            scaled = true;
-            reactLabel.visible = true;
-        }
-        scaleChamith();
+    if (hovered) {
         document.body.style.cursor = 'pointer';
     } else {
-        // HOVER IS INACTIVE
-        reaction.material.color.setHex(0xffffff); // white
+        reaction.material.color.setHex(0xffffff);
         document.body.style.cursor = 'default';
-        if (scaled) {
-            reaction.scale.set(ICON_DEFAULT_SCALE, ICON_DEFAULT_SCALE, ICON_DEFAULT_SCALE);
-            scaled = false;
-            //reaction.remove(reactLabel)
-            reactLabel.visible = false;
-
-        }
     }
 }
 
@@ -729,27 +804,6 @@ function spinChamith() {
     reaction.rotation.x += 0.01;
     reaction.rotation.y += 0.005
     reaction.rotation.z += 0.0001;
-}
-
-// return next scale direction??
-function scaleObjectLoop(objToScale) {
-
-}
-
-function scaleChamith() {
-    if (scaleDirection) {
-        // go bigger
-        scaleFactor += ICON_SCALE_DIFF;
-        if (scaleFactor > ICON_SCALE_FACTOR) {
-            scaleDirection = !scaleDirection;
-        }
-    } else {
-        scaleFactor -= ICON_SCALE_DIFF;
-        if (scaleFactor < ICON_DEFAULT_SCALE) {
-            scaleDirection = !scaleDirection;
-        }
-    }
-    reaction.scale.set(scaleFactor, scaleFactor, scaleFactor);
 }
 
 function spinGit() {
@@ -829,6 +883,7 @@ function animate() {
     checkHover();
     if (DEBUG) {
         controls.update()
+        if (roLightHelper) roLightHelper.update();
     }
 
 
@@ -853,16 +908,17 @@ function arrIcons() {
 }
 
 function arrIconsTwo() {
-    // icons are reaction, github, linkedin, apa
+    if (dinergate) {
+        dinergate.position.set(BLOG_MODEL_POS.x, BLOG_MODEL_POS.y - 3, BLOG_MODEL_POS.z);
+        updateBlogLighting();
+    }
+
+    const socialPos = PAGE_SECTIONS[SOCIAL_INDEX];
+    github.position.set(-4 + socialPos.pos.x, socialPos.pos.y, -5);
+    linkedin.position.set(4 + socialPos.pos.x, socialPos.pos.y, -5);
+
     const reviewPos = PAGE_SECTIONS[REVIEW_INDEX];
     reaction.position.set(4, reviewPos.pos.y, 0);
-
-    const gamePos = PAGE_SECTIONS[GAME_INDEX];
-    genki.position.set(gamePos.pos.x, gamePos.pos.y - 1, -5);
-
-    const otherPos = PAGE_SECTIONS[SOCIAL_INDEX];
-    github.position.set(-4 + otherPos.pos.x, otherPos.pos.y, -5);
-    linkedin.position.set(4 + otherPos.pos.x, otherPos.pos.y, -5);
 }
 
 drawTitle();
